@@ -80,6 +80,15 @@
   .glow-gold {
     box-shadow: 0 0 30px hsla(43, 74%, 49%, 0.3), 0 0 60px hsla(43, 74%, 49%, 0.1);
   }
+
+  .hide-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .hide-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
 }
 
 @keyframes fadeInUp {
