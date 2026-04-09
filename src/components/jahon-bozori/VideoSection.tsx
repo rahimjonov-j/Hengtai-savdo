@@ -5,14 +5,17 @@ import videoSrc from "@/assets/jahon-bozori-video.mp4";
 import videoPoster from "@/assets/jahon-bozori-hero.webp";
 
 export default function VideoSection() {
+  const sectionRef = useRef<HTMLElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
   const [isMuted, setIsMuted] = useState(true);
-  const [isPlaying, setIsPlaying] = useState(true);
+  const [isPlaying, setIsPlaying] = useState(false);
   const [hasError, setHasError] = useState(false);
+  const [shouldLoadVideo, setShouldLoadVideo] = useState(false);
+  const [isSectionVisible, setIsSectionVisible] = useState(false);
 
   const playVideo = async () => {
     const video = videoRef.current;
-    if (!video) return;
+    if (!video || !shouldLoadVideo) return;
 
     try {
       setHasError(false);
@@ -24,6 +27,41 @@ export default function VideoSection() {
   };
 
   useEffect(() => {
+    const section = sectionRef.current;
+    if (!section) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setShouldLoadVideo(true);
+          observer.disconnect();
+        }
+      },
+      { rootMargin: "320px 0px", threshold: 0.01 }
+    );
+
+    observer.observe(section);
+
+    return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
+    const section = sectionRef.current;
+    if (!section) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setIsSectionVisible(entry.isIntersecting);
+      },
+      { threshold: 0.35 }
+    );
+
+    observer.observe(section);
+
+    return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
     const video = videoRef.current;
     if (!video) return;
 
@@ -32,7 +70,7 @@ export default function VideoSection() {
 
   useEffect(() => {
     const video = videoRef.current;
-    if (!video) return;
+    if (!video || !shouldLoadVideo || !isSectionVisible) return;
 
     const attemptAutoplay = async () => {
       try {
@@ -45,7 +83,15 @@ export default function VideoSection() {
     };
 
     void attemptAutoplay();
-  }, []);
+  }, [isSectionVisible, shouldLoadVideo]);
+
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video || isSectionVisible) return;
+
+    video.pause();
+    setIsPlaying(false);
+  }, [isSectionVisible]);
 
   const toggleMute = () => {
     const nextMuted = !isMuted;
@@ -73,7 +119,7 @@ export default function VideoSection() {
   };
 
   return (
-    <section className="py-20 md:py-28 px-6 bg-card/50">
+    <section ref={sectionRef} className="py-20 md:py-28 px-6 bg-card/50">
       <Section className="max-w-4xl mx-auto">
         <h2 className="-mt-3 mb-5 text-center text-3xl md:text-5xl font-black tracking-tight text-primary">
           VIDEONI KO'RING
@@ -83,12 +129,12 @@ export default function VideoSection() {
           <div className="relative overflow-hidden rounded-[1.5rem] bg-black aspect-video">
             <video
               ref={videoRef}
+              src={shouldLoadVideo ? videoSrc : undefined}
               className="w-full h-full object-cover"
-              autoPlay
               loop
               muted={isMuted}
               playsInline
-              preload="auto"
+              preload={shouldLoadVideo ? "metadata" : "none"}
               poster={videoPoster}
               onClick={togglePlayback}
               onPlay={() => setIsPlaying(true)}
@@ -99,7 +145,6 @@ export default function VideoSection() {
                 setIsPlaying(false);
               }}
             >
-              <source src={videoSrc} type="video/mp4" />
               Brauzeringiz video ko'rsatishni qo'llab-quvvatlamaydi.
             </video>
 
