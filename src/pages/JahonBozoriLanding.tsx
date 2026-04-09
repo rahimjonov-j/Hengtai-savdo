@@ -58,6 +58,14 @@ export default function JahonBozoriLanding() {
           <img src={heroImage} alt="Jahon Bozori masterplan ko'rinishi" className="w-full h-full object-cover" />
           <div className="absolute inset-0 bg-gradient-to-b from-background/80 via-background/60 to-background" />
         </div>
+        <div className="absolute left-1/2 top-24 z-10 w-[calc(100%-3rem)] max-w-md -translate-x-1/2 sm:top-28 md:top-32">
+          <div className="flex items-center justify-center gap-3 rounded-[1.75rem] border border-primary/30 bg-background/35 px-5 py-4 text-sm font-semibold text-foreground shadow-lg backdrop-blur-md animate-fade-in-up md:text-base">
+            <span className="leading-snug text-center text-gradient-gold">
+              FARG'ONA VA MARG'ILON SHAHAR MARKAZIDA
+            </span>
+            <MapPin className="h-4 w-4 shrink-0 text-primary md:h-5 md:w-5" />
+          </div>
+        </div>
         <div className="relative z-10 text-center px-6 max-w-4xl mx-auto">
           <h1 className="text-4xl md:text-6xl lg:text-7xl font-black leading-tight animate-fade-in-up">
             <span className="text-gradient-gold">Vodiyda yagona</span>
