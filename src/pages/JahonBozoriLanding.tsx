@@ -1,8 +1,16 @@
 import { useEffect } from "react";
 import heroImage from "@/assets/jahon-bozori-hero.webp";
+import prizeImage from "@/assets/prize-cutout.png";
+import galleryRenderMasterplanOverview from "@/assets/gallery-render-masterplan-overview.webp";
+import gallery2 from "@/assets/gallery-2.webp";
+import galleryMainGate from "@/assets/gallery-main-gate.webp";
+import logisticImage from "@/assets/logistic.webp";
+import omborImage from "@/assets/ombor.webp";
+import galleryTradeCourtyard from "@/assets/gallery-trade-courtyard.webp";
 import {
-  MapPin, Globe, Truck, Users, XCircle, ArrowDown,
-  Timer, Car, Trophy, ChevronDown,
+  type LucideIcon,
+  MapPin, ArrowDown, UserX, ChartNoAxesColumnDecreasing, MapPinOff,
+  Timer, ChevronDown, Send,
 } from "lucide-react";
 import { Section } from "@/components/jahon-bozori/ScrollReveal";
 import LeadForm from "@/components/jahon-bozori/LeadForm";
@@ -17,17 +25,94 @@ function scrollToForm() {
   if (el) el.scrollIntoView({ behavior: "smooth" });
 }
 
+const TELEGRAM_URL = "https://t.me/jahonbozorivodiy";
+
+type StrengthCard =
+  | {
+      title: string;
+      desc: string;
+      image: string;
+      alt: string;
+      icon?: never;
+    }
+  | {
+      title: string;
+      desc: string;
+      icon: LucideIcon;
+      image?: never;
+      alt?: never;
+    };
+
+const strengthCards: StrengthCard[] = [
+  {
+    image: galleryRenderMasterplanOverview,
+    alt: "33 gektar hudud masterplan ko'rinishi",
+    title: "33 gektar hudud",
+    desc: "Markaziy Osiyodagi eng yirik loyihalardan biri",
+  },
+  {
+    image: gallery2,
+    alt: "Xalqaro savdo markazi ko'rinishi",
+    title: "Xalqaro savdo markazi",
+    desc: "Qimmatli Investitsiya Maydoni: O‘rta Osiyo savdo taraqqiyotining markaziy tugunini egallang, mintaqaviy o‘sish dividendlaridan bahramand bo‘ling.",
+  },
+  {
+    image: logisticImage,
+    alt: "Kuchli logistika tarmog'i",
+    title: "Kuchli logistika",
+    desc: "Hamkorlikdagi Logistika Tarmog‘i: Yetakchi logistika kompaniyalari bilan strategik hamkorlikda eng maqbul marshrutlarni taqdim etamiz.",
+  },
+  {
+    image: galleryMainGate,
+    alt: "Doimiy mijoz oqimi",
+    title: "Doimiy mijoz oqimi",
+    desc: "Kunlik minglab xaridorlar oqimi",
+  },
+  {
+    image: omborImage,
+    alt: "Aqlli ombor",
+    title: "Aqlli ombor",
+    desc: "Yuqori Standartli Saqlash: Doimiy Haroratli Ombor, Yuqori Standartli Ombor, Bojxona Ombori kabi ko‘p funksiyali konfiguratsiyalar.",
+  },
+  {
+    image: galleryTradeCourtyard,
+    alt: "Barcha faoliyat turi uchun mos",
+    title: "Barcha faoliyat turi uchun mos",
+    desc: "Har qanday faoliyat turi: Yengil sanoat, qurilish materiallari, maishiy texnika, to‘qimachilik, oziq-ovqat va boshqa tarmoqlar uchun ajratilgan maydonlar.",
+  },
+];
+
+const problemItems = [
+  { icon: UserX, label: "Mijoz yo'q" },
+  { icon: ChartNoAxesColumnDecreasing, label: "Oqim yo'q" },
+  { icon: MapPinOff, label: "Joy noto'g'ri" },
+];
+
 function BandQilishButton({ size = "lg", className = "" }: { size?: "lg" | "sm"; className?: string }) {
   return (
     <button
       onClick={scrollToForm}
-      className={`bg-gradient-gold font-bold rounded-full flex items-center justify-center gap-2 transition-all hover:scale-105 active:scale-95 animate-pulse-glow ${
+      className={`bg-gradient-gold font-bold rounded-full inline-flex items-center justify-center gap-2 transition-all hover:scale-105 active:scale-95 animate-pulse-glow ${
         size === "lg" ? "px-8 py-4 text-lg" : "px-6 py-3 text-base"
       } text-primary-foreground ${className}`}
     >
       <MapPin className="w-5 h-5" />
       Joy band qilish
     </button>
+  );
+}
+
+function TelegramButton({ className = "" }: { className?: string }) {
+  return (
+    <a
+      href={TELEGRAM_URL}
+      target="_blank"
+      rel="noreferrer"
+      className={`bg-gradient-gold font-bold rounded-full inline-flex items-center justify-center gap-2 px-8 py-4 text-lg text-primary-foreground transition-all hover:scale-105 active:scale-95 animate-pulse-glow ${className}`}
+    >
+      <Send className="w-5 h-5" />
+      Telegramga o'tish
+    </a>
   );
 }
 
@@ -53,32 +138,36 @@ export default function JahonBozoriLanding() {
       <ExitIntentModal />
 
       {/* HERO */}
-      <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
+      <section className="relative overflow-hidden">
         <div className="absolute inset-0">
           <img src={heroImage} alt="Jahon Bozori masterplan ko'rinishi" className="w-full h-full object-cover" />
           <div className="absolute inset-0 bg-gradient-to-b from-background/80 via-background/60 to-background" />
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(255,199,74,0.08),transparent_38%),linear-gradient(90deg,rgba(0,0,0,0.28),transparent_22%,transparent_78%,rgba(0,0,0,0.28))]" />
         </div>
-        <div className="absolute left-1/2 top-24 z-10 w-[calc(100%-3rem)] max-w-md -translate-x-1/2 sm:top-28 md:top-32">
-          <div className="flex items-center justify-center gap-3 rounded-[1.75rem] border border-primary/30 bg-background/35 px-5 py-4 text-sm font-semibold text-foreground shadow-lg backdrop-blur-md animate-fade-in-up md:text-base">
-            <span className="leading-snug text-center text-gradient-gold">
-              FARG'ONA VA MARG'ILON SHAHAR MARKAZIDA
-            </span>
-            <MapPin className="h-4 w-4 shrink-0 text-primary md:h-5 md:w-5" />
-          </div>
-        </div>
-        <div className="relative z-10 text-center px-6 max-w-4xl mx-auto">
-          <h1 className="text-4xl md:text-6xl lg:text-7xl font-black leading-tight animate-fade-in-up">
-            <span className="text-gradient-gold">Vodiyda yagona</span>
-            <br />
-            <span className="text-foreground">33 gektarlik</span>
-            <br />
-            <span className="text-gradient-gold">xalqaro bozor</span>
-          </h1>
-          <p className="mt-6 text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto animate-fade-in-up animate-delay-200">
-            Bu oddiy bozor emas — bu <span className="text-foreground font-semibold">savdo oqimi markazi</span>
-          </p>
-          <div className="mt-10 animate-fade-in-up animate-delay-400">
-            <BandQilishButton />
+        <div className="relative z-10 mx-auto flex min-h-screen w-full max-w-6xl items-center justify-center px-6 pb-24 pt-28 text-center sm:px-8 md:pt-32 lg:px-10 lg:pb-28">
+          <div className="w-full max-w-5xl">
+            <div className="flex justify-center animate-fade-in-up">
+              <div className="inline-flex max-w-full items-center justify-center gap-3 rounded-[1.75rem] border border-primary/30 bg-background/35 px-5 py-4 text-sm font-semibold text-foreground shadow-lg backdrop-blur-md md:px-6 md:py-4 md:text-base">
+                <span className="leading-snug text-center text-gradient-gold">
+                  FARG'ONA VA MARG'ILON SHAHAR MARKAZIDA
+                </span>
+                <MapPin className="h-4 w-4 shrink-0 text-primary md:h-5 md:w-5" />
+              </div>
+            </div>
+            <div className="mx-auto mt-8 w-full max-w-[56rem]">
+              <h1 className="animate-fade-in-up text-[clamp(3rem,6vw,5.5rem)] font-black leading-[0.94] tracking-[-0.04em]">
+                <span className="block text-gradient-gold">Vodiyda yagona</span>
+                <span className="block text-foreground">33 gektarlik</span>
+                <span className="block text-gradient-gold">xalqaro bozor</span>
+              </h1>
+              <p className="mx-auto mt-6 max-w-2xl animate-fade-in-up animate-delay-200 text-base leading-relaxed text-muted-foreground sm:text-lg md:text-[1.05rem]">
+                O&apos;rta Osiyo va Yevroosiyo bozorlariga ochilgan asosiy eshik.
+              </p>
+              <div className="mt-10 flex flex-col items-center justify-center gap-4 animate-fade-in-up animate-delay-400 sm:flex-row">
+                <BandQilishButton className="min-w-[17rem]" />
+                <TelegramButton className="min-w-[17rem]" />
+              </div>
+            </div>
           </div>
         </div>
         <div className="absolute bottom-8 left-1/2 -translate-x-1/2 animate-bounce">
@@ -108,10 +197,10 @@ export default function JahonBozoriLanding() {
             Hozir savdoda eng katta <span className="text-gradient-gold">muammo</span> nima?
           </h2>
           <div className="space-y-4 mb-10">
-            {["Mijoz yo'q", "Oqim yo'q", "Joy noto'g'ri"].map((item, i) => (
+            {problemItems.map((item, i) => (
               <div key={i} className="glass-card rounded-xl px-6 py-4 text-lg md:text-xl font-semibold text-foreground flex items-center gap-4">
-                <XCircle className="w-6 h-6 text-destructive shrink-0" />
-                {item}
+                <item.icon className="w-6 h-6 text-destructive shrink-0" />
+                {item.label}
               </div>
             ))}
           </div>
@@ -129,14 +218,27 @@ export default function JahonBozoriLanding() {
             <span className="text-gradient-gold">Jahon Bozori</span> kuchi
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {[
-              { icon: MapPin, title: "33 gektar hudud", desc: "Markaziy Osiyodagi eng yirik loyihalardan biri" },
-              { icon: Globe, title: "Xalqaro savdo markazi", desc: "Import-eksport uchun strategik joy" },
-              { icon: Truck, title: "Kuchli logistika", desc: "Yetkazib berish tizimi ichiga qurilgan" },
-              { icon: Users, title: "Doimiy mijoz oqimi", desc: "Kunlik minglab xaridorlar oqimi" },
-            ].map((item, i) => (
-              <div key={i} className="glass-card rounded-2xl p-6 md:p-8 hover:border-primary/30 transition-colors">
-                <item.icon className="w-10 h-10 text-primary mb-4" />
+            {strengthCards.map((item, i) => (
+              <div
+                key={i}
+                className={`glass-card group rounded-2xl transition-colors hover:border-primary/30 ${
+                  item.image ? "overflow-hidden p-4 md:p-5" : "p-6 md:p-8"
+                }`}
+              >
+                {item.image ? (
+                  <div className="relative mb-5 overflow-hidden rounded-[1.35rem] border border-white/10 bg-black/60 shadow-[0_20px_60px_rgba(0,0,0,0.35)]">
+                    <img
+                      src={item.image}
+                      alt={item.alt}
+                      className="aspect-[16/10] w-full object-cover blur-[0.35px] brightness-[0.74] contrast-120 saturate-[0.95] scale-[1.04] transition-transform duration-700 group-hover:scale-[1.08]"
+                    />
+                    <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(255,199,74,0.14),transparent_42%)]" />
+                    <div className="absolute inset-0 bg-gradient-to-b from-black/0 via-black/18 to-black/52" />
+                    <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-black/62 to-transparent" />
+                  </div>
+                ) : (
+                  <item.icon className="mb-4 h-10 w-10 text-primary" />
+                )}
                 <h3 className="text-xl md:text-2xl font-bold text-foreground mb-2">{item.title}</h3>
                 <p className="text-muted-foreground">{item.desc}</p>
               </div>
@@ -167,10 +269,11 @@ export default function JahonBozoriLanding() {
       {/* DAMAS OFFER */}
       <section className="py-20 md:py-28 px-6 bg-card/50">
         <Section className="max-w-3xl mx-auto text-center">
-          <div className="flex items-center justify-center gap-3 mb-6">
-            <Car className="w-14 h-14 md:w-20 md:h-20 text-primary" />
-            <Trophy className="w-10 h-10 md:w-14 md:h-14 text-primary" />
-          </div>
+          <img
+            src={prizeImage}
+            alt="5 ta Damas sovg'asi"
+            className="mx-auto mb-2 block h-auto w-full max-w-[36rem] md:mb-3 md:max-w-[42rem]"
+          />
           <h2 className="text-3xl md:text-5xl font-black text-foreground mb-4">
             <span className="text-gradient-gold">5 ta Damas</span>dan bittasini yutib oling
           </h2>
@@ -190,7 +293,7 @@ export default function JahonBozoriLanding() {
             Bunday imkoniyatlar <span className="text-gradient-gold">har kuni chiqmaydi</span>
           </h2>
           <p className="text-lg md:text-xl text-muted-foreground">
-            Eng yaxshi joylar birinchi bo'lib band qilinadi
+            Cheklangan joylar mavjud.Eksklyuziv Joylashish Dasturidan Bahramand Bo&apos;ling.
           </p>
           <div className="mt-8 glass-card rounded-2xl p-6 inline-flex items-center gap-3">
             <Timer className="w-8 h-8 text-primary" />
@@ -219,7 +322,7 @@ export default function JahonBozoriLanding() {
       </section>
 
       {/* STICKY CTA */}
-      <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 md:bottom-8">
+      <div className="fixed bottom-6 left-1/2 z-50 -translate-x-1/2 md:hidden">
         <BandQilishButton size="sm" className="shadow-2xl" />
       </div>
 
