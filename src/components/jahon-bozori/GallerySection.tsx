@@ -1,26 +1,46 @@
 import { useEffect, useState } from "react";
 import { ChevronDown, ChevronUp, X } from "lucide-react";
 import { Section } from "./ScrollReveal";
-import gallery1 from "@/assets/gallery-1.jpg";
-import galleryCoveredWalkway from "@/assets/gallery-covered-walkway.jpg";
-import galleryWaterfrontBoulevard from "@/assets/gallery-waterfront-boulevard.jpg";
-import galleryMainGate from "@/assets/gallery-main-gate.jpg";
-import galleryTradeCourtyard from "@/assets/gallery-trade-courtyard.jpg";
-import galleryMarketHall1 from "@/assets/gallery-market-hall-1.jpg";
-import galleryMarketHall2 from "@/assets/gallery-market-hall-2.jpg";
-import galleryMarketHall3 from "@/assets/gallery-market-hall-3.jpg";
-import galleryMarketHall4 from "@/assets/gallery-market-hall-4.jpg";
+import gallery1 from "@/assets/gallery-1.webp";
+import galleryCoveredWalkway from "@/assets/gallery-covered-walkway.webp";
+import galleryWaterfrontBoulevard from "@/assets/gallery-waterfront-boulevard.webp";
+import galleryMainGate from "@/assets/gallery-main-gate.webp";
+import galleryTradeCourtyard from "@/assets/gallery-trade-courtyard.webp";
+import galleryMarketHall1 from "@/assets/gallery-market-hall-1.webp";
+import galleryMarketHall2 from "@/assets/gallery-market-hall-2.webp";
+import galleryMarketHall3 from "@/assets/gallery-market-hall-3.webp";
+import galleryMarketHall4 from "@/assets/gallery-market-hall-4.webp";
+import galleryRenderAerialMasterplan from "@/assets/gallery-render-aerial-masterplan.webp";
+import galleryRenderCentralPlazaAerial from "@/assets/gallery-render-central-plaza-aerial.webp";
+import galleryRenderTerminalFront from "@/assets/gallery-render-terminal-front.webp";
+import galleryRenderParkingCourt from "@/assets/gallery-render-parking-court.webp";
+import galleryRenderEntryPlaza from "@/assets/gallery-render-entry-plaza.webp";
+import galleryRenderSiteplanOverlay from "@/assets/gallery-render-siteplan-overlay.webp";
+import galleryRenderTerminalParking from "@/assets/gallery-render-terminal-parking.webp";
+import galleryRenderFruitMarket from "@/assets/gallery-render-fruit-market.webp";
+import galleryRenderBoulevardView from "@/assets/gallery-render-boulevard-view.webp";
+import galleryRenderMasterplanOverview from "@/assets/gallery-render-masterplan-overview.webp";
 
 const images = [
   gallery1,
+  galleryRenderAerialMasterplan,
   galleryCoveredWalkway,
+  galleryRenderCentralPlazaAerial,
   galleryWaterfrontBoulevard,
+  galleryRenderTerminalFront,
   galleryMainGate,
+  galleryRenderEntryPlaza,
   galleryTradeCourtyard,
+  galleryRenderFruitMarket,
   galleryMarketHall1,
+  galleryRenderBoulevardView,
   galleryMarketHall2,
+  galleryRenderTerminalParking,
   galleryMarketHall3,
+  galleryRenderParkingCourt,
   galleryMarketHall4,
+  galleryRenderSiteplanOverlay,
+  galleryRenderMasterplanOverview,
 ];
 
 export default function GallerySection() {

@@ -88,8 +88,11 @@ export default function ExitIntentModal() {
   if (!show) return null;
 
   return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-background/80 backdrop-blur-sm animate-fade-in-up" style={{ animationDuration: "0.3s" }}>
-      <div className="relative w-full max-w-md glass-card rounded-2xl p-6 md:p-8 border border-primary/20 glow-gold">
+    <div
+      className="fixed inset-0 z-[100] flex items-center justify-center bg-background/80 px-4 pb-6 pt-20 backdrop-blur-sm animate-fade-in-up md:p-4"
+      style={{ animationDuration: "0.3s" }}
+    >
+      <div className="relative max-h-[calc(100vh-7rem)] w-full max-w-md overflow-y-auto glass-card rounded-2xl border border-primary/20 p-6 glow-gold md:max-h-[calc(100vh-2rem)] md:p-8">
         <button onClick={handleClose} className="absolute top-4 right-4 text-muted-foreground hover:text-foreground transition-colors">
           <X className="w-6 h-6" />
         </button>

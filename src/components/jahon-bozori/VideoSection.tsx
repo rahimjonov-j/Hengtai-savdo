@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { Volume2, VolumeX, Play, ExternalLink } from "lucide-react";
 import { Section } from "./ScrollReveal";
 import videoSrc from "@/assets/jahon-bozori-video.mp4";
-import videoPoster from "@/assets/jahon-bozori-hero.png";
+import videoPoster from "@/assets/jahon-bozori-hero.webp";
 
 export default function VideoSection() {
   const videoRef = useRef<HTMLVideoElement>(null);

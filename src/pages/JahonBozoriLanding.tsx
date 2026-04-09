@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import heroImage from "@/assets/jahon-bozori-hero.png";
+import heroImage from "@/assets/jahon-bozori-hero.webp";
 import {
   MapPin, Globe, Truck, Users, XCircle, ArrowDown,
   Timer, Car, Trophy, ChevronDown,
