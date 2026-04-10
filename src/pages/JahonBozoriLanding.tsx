@@ -121,10 +121,10 @@ function FactsLink({ className = "" }: { className?: string }) {
   return (
     <Link
       to="/faktlar"
-      className={`inline-flex items-center justify-center gap-2 text-base font-semibold text-primary underline decoration-primary/50 underline-offset-4 transition-all hover:gap-3 hover:decoration-primary ${className}`}
+      className={`inline-flex items-center justify-center gap-2 rounded-full bg-gradient-gold px-8 py-4 text-base font-bold text-primary-foreground transition-all hover:scale-105 hover:gap-3 active:scale-95 animate-pulse-glow ${className}`}
     >
-      Bozor haqida to'liq faktlar
-      <ArrowRight className="h-4 w-4" />
+      Faktlar sahifasiga o'tish
+      <ArrowRight className="h-5 w-5" />
     </Link>
   );
 }
