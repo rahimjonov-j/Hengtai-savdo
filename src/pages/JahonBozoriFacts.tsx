@@ -180,7 +180,7 @@ export default function JahonBozoriFacts() {
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(255,199,74,0.16),transparent_34%),linear-gradient(90deg,rgba(0,0,0,0.36),transparent_22%,transparent_78%,rgba(0,0,0,0.34))]" />
         </div>
 
-        <div className="relative z-10 mx-auto flex min-h-[68vh] w-full max-w-7xl items-center px-6 py-20 sm:px-8 lg:px-10">
+        <div className="relative z-10 mx-auto flex w-full max-w-7xl items-start px-6 pb-10 pt-16 sm:px-8 sm:pb-12 sm:pt-20 lg:min-h-[68vh] lg:items-center lg:px-10 lg:py-20">
           <Section className="w-full">
             <Link
               to="/"
@@ -226,8 +226,8 @@ export default function JahonBozoriFacts() {
         </div>
       </section>
 
-      <section className="px-6 pb-6 md:pb-10">
-        <Section className="mx-auto max-w-7xl">
+      <section className="px-6 pb-8 pt-2 md:pb-10 md:pt-4">
+        <div className="mx-auto max-w-7xl">
           <div className="grid gap-4 md:grid-cols-3">
             {stats.map((stat) => (
               <div
@@ -239,7 +239,7 @@ export default function JahonBozoriFacts() {
               </div>
             ))}
           </div>
-        </Section>
+        </div>
       </section>
 
       <section className="px-6 py-14 md:py-20">
