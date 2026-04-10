@@ -13,6 +13,33 @@ export default defineConfig(({ mode }) => ({
     },
   },
   plugins: [react(), mode === "development" && componentTagger()].filter(Boolean),
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks(id) {
+          if (!id.includes("node_modules")) return;
+
+          if (
+            id.includes("react-router-dom") ||
+            id.includes("react-dom") ||
+            id.includes("/react/")
+          ) {
+            return "framework";
+          }
+
+          if (id.includes("@tanstack")) {
+            return "query";
+          }
+
+          if (id.includes("@radix-ui")) {
+            return "radix";
+          }
+
+          return "vendor";
+        },
+      },
+    },
+  },
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),

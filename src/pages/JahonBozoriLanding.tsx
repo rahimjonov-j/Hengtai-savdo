@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { lazy, Suspense, useEffect, useState } from "react";
 import heroImage from "@/assets/jahon-bozori-hero.webp";
 import prizeImage from "@/assets/prize-cutout.png";
 import galleryRenderMasterplanOverview from "@/assets/gallery-render-masterplan-overview.webp";
@@ -13,13 +13,15 @@ import {
   Timer, ChevronDown, Send, ArrowRight,
 } from "lucide-react";
 import { Link } from "react-router-dom";
+import DeferredSection from "@/components/DeferredSection";
 import { Section } from "@/components/jahon-bozori/ScrollReveal";
 import LeadForm from "@/components/jahon-bozori/LeadForm";
-import ExitIntentModal from "@/components/jahon-bozori/ExitIntentModal";
-import GallerySection from "@/components/jahon-bozori/GallerySection";
-import ReelsSection from "@/components/jahon-bozori/ReelsSection";
-import ContactSection from "@/components/jahon-bozori/ContactSection";
-import VideoSection from "@/components/jahon-bozori/VideoSection";
+
+const ExitIntentModal = lazy(() => import("@/components/jahon-bozori/ExitIntentModal"));
+const GallerySection = lazy(() => import("@/components/jahon-bozori/GallerySection"));
+const ReelsSection = lazy(() => import("@/components/jahon-bozori/ReelsSection"));
+const ContactSection = lazy(() => import("@/components/jahon-bozori/ContactSection"));
+const VideoSection = lazy(() => import("@/components/jahon-bozori/VideoSection"));
 
 function scrollToForm() {
   const el = document.getElementById("lead-form");
@@ -129,7 +131,25 @@ function FactsLink({ className = "" }: { className?: string }) {
   );
 }
 
+function SectionPlaceholder({
+  className = "",
+  heightClass = "h-72 md:h-80",
+}: {
+  className?: string;
+  heightClass?: string;
+}) {
+  return (
+    <section className={`px-6 py-20 md:py-28 ${className}`} aria-hidden="true">
+      <div
+        className={`mx-auto w-full max-w-6xl rounded-[2rem] border border-white/10 bg-white/[0.03] animate-pulse ${heightClass}`}
+      />
+    </section>
+  );
+}
+
 export default function JahonBozoriLanding() {
+  const [shouldMountExitIntentModal, setShouldMountExitIntentModal] = useState(false);
+
   useEffect(() => {
     const checkScroll = () => {
       const scrollPercent = Math.round(
@@ -146,14 +166,37 @@ export default function JahonBozoriLanding() {
     return () => window.removeEventListener("scroll", checkScroll);
   }, []);
 
+  useEffect(() => {
+    const enableModal = () => setShouldMountExitIntentModal(true);
+
+    if ("requestIdleCallback" in window) {
+      const idleCallbackId = window.requestIdleCallback(enableModal, { timeout: 1800 });
+      return () => window.cancelIdleCallback(idleCallbackId);
+    }
+
+    const timeoutId = window.setTimeout(enableModal, 1200);
+    return () => window.clearTimeout(timeoutId);
+  }, []);
+
   return (
     <div className="min-h-screen bg-background text-foreground overflow-x-hidden">
-      <ExitIntentModal />
+      {shouldMountExitIntentModal ? (
+        <Suspense fallback={null}>
+          <ExitIntentModal />
+        </Suspense>
+      ) : null}
 
       {/* HERO */}
       <section className="relative overflow-hidden">
         <div className="absolute inset-0">
-          <img src={heroImage} alt="Jahon Bozori masterplan ko'rinishi" className="w-full h-full object-cover" />
+          <img
+            src={heroImage}
+            alt="Jahon Bozori masterplan ko'rinishi"
+            className="w-full h-full object-cover"
+            loading="eager"
+            fetchPriority="high"
+            decoding="async"
+          />
           <div className="absolute inset-0 bg-gradient-to-b from-background/80 via-background/60 to-background" />
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(255,199,74,0.08),transparent_38%),linear-gradient(90deg,rgba(0,0,0,0.28),transparent_22%,transparent_78%,rgba(0,0,0,0.28))]" />
         </div>
@@ -203,7 +246,12 @@ export default function JahonBozoriLanding() {
         </Section>
       </section>
 
-      <VideoSection />
+      <DeferredSection
+        rootMargin="420px 0px"
+        fallback={<SectionPlaceholder className="bg-card/50" heightClass="h-[22rem] md:h-[28rem]" />}
+      >
+        <VideoSection />
+      </DeferredSection>
 
       {/* MUAMMO */}
       <section className="py-20 md:py-28 px-6">
@@ -246,6 +294,8 @@ export default function JahonBozoriLanding() {
                       src={item.image}
                       alt={item.alt}
                       className="aspect-[16/10] w-full object-cover blur-[0.35px] brightness-[0.74] contrast-120 saturate-[0.95] scale-[1.04] transition-transform duration-700 group-hover:scale-[1.08]"
+                      loading="lazy"
+                      decoding="async"
                     />
                     <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(255,199,74,0.14),transparent_42%)]" />
                     <div className="absolute inset-0 bg-gradient-to-b from-black/0 via-black/18 to-black/52" />
@@ -279,7 +329,9 @@ export default function JahonBozoriLanding() {
       </section>
 
       {/* GALLERY */}
-      <GallerySection />
+      <DeferredSection rootMargin="520px 0px" fallback={<SectionPlaceholder heightClass="h-[28rem] md:h-[34rem]" />}>
+        <GallerySection />
+      </DeferredSection>
 
       {/* DAMAS OFFER */}
       <section className="py-20 md:py-28 px-6 bg-card/50">
@@ -288,6 +340,8 @@ export default function JahonBozoriLanding() {
             src={prizeImage}
             alt="5 ta Damas sovg'asi"
             className="mx-auto mb-2 block h-auto w-full max-w-[36rem] md:mb-3 md:max-w-[42rem]"
+            loading="lazy"
+            decoding="async"
           />
           <h2 className="text-3xl md:text-5xl font-black text-foreground mb-4">
             <span className="text-gradient-gold">5 ta Damas</span>dan bittasini yutib oling
@@ -318,10 +372,17 @@ export default function JahonBozoriLanding() {
       </section>
 
       {/* REELS */}
-      <ReelsSection />
+      <DeferredSection
+        rootMargin="620px 0px"
+        fallback={<SectionPlaceholder className="bg-card/50" heightClass="h-[34rem] md:h-[42rem]" />}
+      >
+        <ReelsSection />
+      </DeferredSection>
 
       {/* CONTACT */}
-      <ContactSection />
+      <DeferredSection rootMargin="420px 0px" fallback={<SectionPlaceholder heightClass="h-64 md:h-72" />}>
+        <ContactSection />
+      </DeferredSection>
 
       {/* CTA — bottom form repeat */}
       <section className="py-20 md:py-28 px-6 bg-card/50">
