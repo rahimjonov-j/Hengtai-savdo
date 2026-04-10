@@ -11,6 +11,7 @@ import {
 
 const API_URL = "https://backend.prohome.uz/api/v1/leeds/create-for-hengtai";
 const TELEGRAM_URL = "https://t.me/jahonbozorivodiy";
+const TELEGRAM_REDIRECT_DELAY_MS = 4000;
 
 export default function ExitIntentModal() {
   const [show, setShow] = useState(false);
@@ -48,6 +49,16 @@ export default function ExitIntentModal() {
     };
   }, [dismissed]);
 
+  useEffect(() => {
+    if (!submitted || !show) return;
+
+    const timeoutId = window.setTimeout(() => {
+      window.location.assign(TELEGRAM_URL);
+    }, TELEGRAM_REDIRECT_DELAY_MS);
+
+    return () => window.clearTimeout(timeoutId);
+  }, [show, submitted]);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -68,11 +79,6 @@ export default function ExitIntentModal() {
       if (!res.ok) throw new Error("API error");
       setSubmitted(true);
       toast({ title: "Arizangiz qabul qilindi!" });
-      setTimeout(() => {
-        window.open(TELEGRAM_URL, "_blank");
-        setShow(false);
-        setDismissed(true);
-      }, 2000);
     } catch {
       toast({ title: "Xatolik yuz berdi", variant: "destructive" });
     } finally {
@@ -99,9 +105,9 @@ export default function ExitIntentModal() {
 
         {submitted ? (
           <div className="text-center py-4">
-            <CheckCircle2 className="w-14 h-14 text-primary mx-auto mb-4" />
+            <CheckCircle2 className="mx-auto mb-4 h-14 w-14 text-emerald-500" />
             <p className="text-xl font-bold text-foreground mb-2">Rahmat! Arizangiz qabul qilindi</p>
-            <p className="text-muted-foreground">Telegram kanalga yo'naltirilmoqdasiz...</p>
+            <p className="text-muted-foreground">Barcha yangiliklarni telegram kanalimizda kuzatib boring.</p>
           </div>
         ) : (
           <>

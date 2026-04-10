@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { User, Phone, MapPin, Loader2, CheckCircle2 } from "lucide-react";
 import {
@@ -10,6 +10,7 @@ import {
 } from "./leadFormValidation";
 
 const TELEGRAM_URL = "https://t.me/jahonbozorivodiy";
+const TELEGRAM_REDIRECT_DELAY_MS = 4000;
 const API_URL = "https://backend.prohome.uz/api/v1/leeds/create-for-hengtai";
 
 interface LeadFormProps {
@@ -22,8 +23,17 @@ export default function LeadForm({ onSuccess }: LeadFormProps) {
   const [errors, setErrors] = useState(() => ({ ...emptyLeadFormErrors }));
   const [loading, setLoading] = useState(false);
   const [submitted, setSubmitted] = useState(false);
-  const [countdown, setCountdown] = useState<number | null>(null);
   const { toast } = useToast();
+
+  useEffect(() => {
+    if (!submitted) return;
+
+    const timeoutId = window.setTimeout(() => {
+      window.location.assign(TELEGRAM_URL);
+    }, TELEGRAM_REDIRECT_DELAY_MS);
+
+    return () => window.clearTimeout(timeoutId);
+  }, [submitted]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -46,18 +56,6 @@ export default function LeadForm({ onSuccess }: LeadFormProps) {
       setSubmitted(true);
       onSuccess?.();
       toast({ title: "Arizangiz qabul qilindi!" });
-
-      // Hidden 3s countdown then redirect
-      setCountdown(3);
-      let c = 3;
-      const interval = setInterval(() => {
-        c--;
-        setCountdown(c);
-        if (c <= 0) {
-          clearInterval(interval);
-          window.open(TELEGRAM_URL, "_blank");
-        }
-      }, 1000);
     } catch {
       toast({ title: "Xatolik yuz berdi, qaytadan urinib ko'ring", variant: "destructive" });
     } finally {
@@ -68,9 +66,9 @@ export default function LeadForm({ onSuccess }: LeadFormProps) {
   if (submitted) {
     return (
       <div className="glass-card rounded-2xl p-8 text-center">
-        <CheckCircle2 className="w-14 h-14 text-primary mx-auto mb-4" />
+        <CheckCircle2 className="mx-auto mb-4 h-14 w-14 text-emerald-500" />
         <p className="text-xl font-bold text-foreground mb-2">Rahmat! Arizangiz qabul qilindi</p>
-        <p className="text-muted-foreground">Telegram kanalga yo'naltirilmoqdasiz...</p>
+        <p className="text-muted-foreground">Barcha yangiliklarni telegram kanalimizda kuzatib boring.</p>
       </div>
     );
   }

@@ -191,6 +191,10 @@ export default function VideoSection() {
             )}
           </div>
         </div>
+
+        <p className="mt-6 text-center text-lg font-bold text-gradient-gold md:text-2xl">
+          Joy Band Qilishdan Oldin Bu videoni ko&apos;ring!
+        </p>
       </Section>
     </section>
   );

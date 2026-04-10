@@ -10,8 +10,9 @@ import galleryTradeCourtyard from "@/assets/gallery-trade-courtyard.webp";
 import {
   type LucideIcon,
   MapPin, ArrowDown, UserX, ChartNoAxesColumnDecreasing, MapPinOff,
-  Timer, ChevronDown, Send,
+  Timer, ChevronDown, Send, ArrowRight,
 } from "lucide-react";
+import { Link } from "react-router-dom";
 import { Section } from "@/components/jahon-bozori/ScrollReveal";
 import LeadForm from "@/components/jahon-bozori/LeadForm";
 import ExitIntentModal from "@/components/jahon-bozori/ExitIntentModal";
@@ -116,6 +117,18 @@ function TelegramButton({ className = "" }: { className?: string }) {
   );
 }
 
+function FactsLink({ className = "" }: { className?: string }) {
+  return (
+    <Link
+      to="/faktlar"
+      className={`inline-flex items-center justify-center gap-2 text-base font-semibold text-primary underline decoration-primary/50 underline-offset-4 transition-all hover:gap-3 hover:decoration-primary ${className}`}
+    >
+      Bozor haqida to'liq faktlar
+      <ArrowRight className="h-4 w-4" />
+    </Link>
+  );
+}
+
 export default function JahonBozoriLanding() {
   useEffect(() => {
     const checkScroll = () => {
@@ -144,17 +157,19 @@ export default function JahonBozoriLanding() {
           <div className="absolute inset-0 bg-gradient-to-b from-background/80 via-background/60 to-background" />
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(255,199,74,0.08),transparent_38%),linear-gradient(90deg,rgba(0,0,0,0.28),transparent_22%,transparent_78%,rgba(0,0,0,0.28))]" />
         </div>
+        <div className="absolute left-1/2 top-6 z-20 w-full max-w-6xl -translate-x-1/2 px-6 sm:top-8 sm:px-8 lg:px-10">
+          <div className="flex justify-center animate-fade-in-up">
+            <div className="inline-flex max-w-full items-center justify-center gap-3 rounded-[1.75rem] border border-primary/30 bg-background/35 px-5 py-4 text-sm font-semibold text-foreground shadow-lg backdrop-blur-md md:px-6 md:py-4 md:text-base">
+              <span className="leading-snug text-center text-gradient-gold">
+                FARG'ONA VA MARG'ILON SHAHAR MARKAZIDA
+              </span>
+              <MapPin className="h-4 w-4 shrink-0 text-primary md:h-5 md:w-5" />
+            </div>
+          </div>
+        </div>
         <div className="relative z-10 mx-auto flex min-h-screen w-full max-w-6xl items-center justify-center px-6 pb-24 pt-28 text-center sm:px-8 md:pt-32 lg:px-10 lg:pb-28">
           <div className="w-full max-w-5xl">
-            <div className="flex justify-center animate-fade-in-up">
-              <div className="inline-flex max-w-full items-center justify-center gap-3 rounded-[1.75rem] border border-primary/30 bg-background/35 px-5 py-4 text-sm font-semibold text-foreground shadow-lg backdrop-blur-md md:px-6 md:py-4 md:text-base">
-                <span className="leading-snug text-center text-gradient-gold">
-                  FARG'ONA VA MARG'ILON SHAHAR MARKAZIDA
-                </span>
-                <MapPin className="h-4 w-4 shrink-0 text-primary md:h-5 md:w-5" />
-              </div>
-            </div>
-            <div className="mx-auto mt-8 w-full max-w-[56rem]">
+            <div className="mx-auto w-full max-w-[56rem]">
               <h1 className="animate-fade-in-up text-[clamp(3rem,6vw,5.5rem)] font-black leading-[0.94] tracking-[-0.04em]">
                 <span className="block text-gradient-gold">Vodiyda yagona</span>
                 <span className="block text-foreground">33 gektarlik</span>
@@ -215,7 +230,7 @@ export default function JahonBozoriLanding() {
       <section className="py-20 md:py-28 px-6 bg-card/50">
         <Section className="max-w-4xl mx-auto">
           <h2 className="text-3xl md:text-5xl font-black text-center mb-14">
-            <span className="text-gradient-gold">Jahon Bozori</span> kuchi
+            <span className="text-gradient-gold">Jahon Bozorining</span> Eng <span className="text-gradient-gold">Katta Kuchi</span> Nimada?
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {strengthCards.map((item, i) => (
@@ -245,7 +260,7 @@ export default function JahonBozoriLanding() {
             ))}
           </div>
           <div className="text-center mt-10">
-            <BandQilishButton size="sm" />
+            <FactsLink className="text-lg md:text-xl" />
           </div>
         </Section>
       </section>
