@@ -1,6 +1,6 @@
 import { lazy, Suspense, useEffect, useState } from "react";
 import heroImage from "@/assets/jahon-bozori-hero.webp";
-import prizeImage from "@/assets/prize-cutout.png";
+import prizeImage from "@/assets/prize-cutout.webp";
 import galleryRenderMasterplanOverview from "@/assets/gallery-render-masterplan-overview.webp";
 import gallery2 from "@/assets/gallery-2.webp";
 import galleryMainGate from "@/assets/gallery-main-gate.webp";
