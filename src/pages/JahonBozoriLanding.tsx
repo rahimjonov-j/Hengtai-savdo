@@ -147,19 +147,26 @@ function SectionPlaceholder({
   );
 }
 
+type TrackingWindow = Window & {
+  __tracked50?: boolean;
+  __tracked90?: boolean;
+};
+
 export default function JahonBozoriLanding() {
   const [shouldMountExitIntentModal, setShouldMountExitIntentModal] = useState(false);
 
   useEffect(() => {
+    const trackingWindow = window as TrackingWindow;
+
     const checkScroll = () => {
       const scrollPercent = Math.round(
         (window.scrollY / (document.documentElement.scrollHeight - window.innerHeight)) * 100
       );
-      if (scrollPercent >= 50 && !(window as any).__tracked50) {
-        (window as any).__tracked50 = true;
+      if (scrollPercent >= 50 && !trackingWindow.__tracked50) {
+        trackingWindow.__tracked50 = true;
       }
-      if (scrollPercent >= 90 && !(window as any).__tracked90) {
-        (window as any).__tracked90 = true;
+      if (scrollPercent >= 90 && !trackingWindow.__tracked90) {
+        trackingWindow.__tracked90 = true;
       }
     };
     window.addEventListener("scroll", checkScroll, { passive: true });

@@ -1,11 +1,13 @@
 import { useEffect, useRef, useState } from "react";
 import { ChevronDown, ChevronUp, Play, Volume2, VolumeX } from "lucide-react";
 import { Section } from "./ScrollReveal";
+import mijozbn from "@/assets/mijozbn.mp4";
 import reel1 from "@/assets/videos/reel-1.mp4";
 import reel2 from "@/assets/videos/reel-2.mp4";
 import reel3 from "@/assets/videos/reel-3.mp4";
 
 const reels = [
+  { src: mijozbn, title: "Mijozlar fikri", description: "Savdo qilayotgan mijozlarning qisqa video fikrlari" },
   { src: reel1, title: "Reel 01", description: "Majmua bo'ylab qisqa video lavha" },
   { src: reel2, title: "Reel 02", description: "Tashqi ko'rinish va kirish qismi" },
   { src: reel3, title: "Reel 03", description: "Loyiha taqdimotidan qisqa kadr" },
@@ -20,6 +22,7 @@ export default function ReelsSection() {
   const [playingVideoIndex, setPlayingVideoIndex] = useState<number | null>(null);
   const [isMuted, setIsMuted] = useState(true);
   const [isSectionVisible, setIsSectionVisible] = useState(false);
+  const [shouldLoadVideos, setShouldLoadVideos] = useState(false);
 
   const pauseOtherVideos = (currentIndex: number) => {
     videoRefs.current.forEach((video, index) => {
@@ -62,6 +65,21 @@ export default function ReelsSection() {
   };
 
   useEffect(() => {
+    const videos = videoRefs.current;
+    const preloadObserver = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setShouldLoadVideos(true);
+          preloadObserver.disconnect();
+        }
+      },
+      { rootMargin: "280px 0px", threshold: 0.01 }
+    );
+
+    if (sectionRef.current) {
+      preloadObserver.observe(sectionRef.current);
+    }
+
     const observer = new IntersectionObserver(
       ([entry]) => {
         setIsSectionVisible(entry.isIntersecting);
@@ -74,11 +92,12 @@ export default function ReelsSection() {
     }
 
     return () => {
+      preloadObserver.disconnect();
       observer.disconnect();
       if (scrollTimeoutRef.current !== null) {
         window.clearTimeout(scrollTimeoutRef.current);
       }
-      videoRefs.current.forEach((video) => video?.pause());
+      videos.forEach((video) => video?.pause());
     };
   }, []);
 
@@ -131,6 +150,9 @@ export default function ReelsSection() {
     }, 120);
   };
 
+  const shouldMountVideoSource = (index: number) =>
+    shouldLoadVideos && Math.abs(index - activeVideoIndex) <= 1;
+
   return (
     <section className="py-20 md:py-28 px-6 bg-card/50">
       <Section className="mx-auto max-w-6xl">
@@ -169,17 +191,17 @@ export default function ReelsSection() {
                           ref={(element) => {
                             videoRefs.current[i] = element;
                           }}
+                          src={shouldMountVideoSource(i) ? video.src : undefined}
                           className="block h-full w-full object-cover"
                           muted={isMuted}
                           loop
                           playsInline
-                          preload={i === 0 ? "auto" : "metadata"}
+                          preload={shouldMountVideoSource(i) ? (i === activeVideoIndex ? "auto" : "metadata") : "none"}
                           title={video.title}
                           onPlay={() => handlePlay(i)}
                           onPause={() => handlePause(i)}
                           onEnded={() => handlePause(i)}
                         >
-                          <source src={video.src} type="video/mp4" />
                           Brauzeringiz video ko'rsatishni qo'llab-quvvatlamaydi.
                         </video>
 
