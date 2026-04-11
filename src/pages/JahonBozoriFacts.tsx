@@ -104,7 +104,7 @@ const facts: FactItem[] = [
   {
     id: "6-fakt",
     title: "Katta masshtab, katta oqim",
-    headline: "33 gektar hudud va 4500+ do'kon bu loyihani oddiy bozordan ancha katta formatga olib chiqadi.",
+    headline: "33.3 gektar hudud va 4500+ do'kon bu loyihani oddiy bozordan ancha katta formatga olib chiqadi.",
     points: [
       "Bu Vodiyning asosiy savdo markaziga aylanish ehtimolini sezilarli oshiradi.",
       "Katta masshtab ko'proq kategoriya, ko'proq xaridor va ko'proq aylanish degani.",

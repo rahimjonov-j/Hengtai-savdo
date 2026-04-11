@@ -49,8 +49,8 @@ type StrengthCard =
 const strengthCards: StrengthCard[] = [
   {
     image: galleryRenderMasterplanOverview,
-    alt: "33 gektar hudud masterplan ko'rinishi",
-    title: "33 gektar hudud",
+    alt: "33.3 gektar hudud masterplan ko'rinishi",
+    title: "33.3 gektar hudud",
     desc: "Markaziy Osiyodagi eng yirik loyihalardan biri",
   },
   {
@@ -222,7 +222,7 @@ export default function JahonBozoriLanding() {
             <div className="mx-auto w-full max-w-[56rem]">
               <h1 className="animate-fade-in-up text-[clamp(3rem,6vw,5.5rem)] font-black leading-[0.94] tracking-[-0.04em]">
                 <span className="block text-gradient-gold">Vodiyda yagona</span>
-                <span className="block text-foreground">33 gektarlik</span>
+                <span className="block text-foreground">33.3 gektarlik</span>
                 <span className="block text-gradient-gold">xalqaro bozor</span>
               </h1>
               <p className="mx-auto mt-6 max-w-2xl animate-fade-in-up animate-delay-200 text-base leading-relaxed text-muted-foreground sm:text-lg md:text-[1.05rem]">
