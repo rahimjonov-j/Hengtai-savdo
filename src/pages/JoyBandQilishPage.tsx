@@ -1,14 +1,33 @@
+import { useRef } from "react";
 import heroImage from "@/assets/jahon-bozori-hero.webp";
 import LeadForm from "@/components/jahon-bozori/LeadForm";
 import { Section } from "@/components/jahon-bozori/ScrollReveal";
 import { ChevronLeft, Clock3, MapPin, Phone } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const PHONES = ["+998 88 219 66 66", "+998 88 692 33 33"];
 
 export default function JoyBandQilishPage() {
+  const navigate = useNavigate();
+  const swipeStartXRef = useRef<number | null>(null);
+
   return (
-    <div className="min-h-screen bg-background text-foreground">
+    <div
+      className="min-h-screen bg-background text-foreground"
+      onTouchStart={(event) => {
+        swipeStartXRef.current = event.changedTouches[0]?.clientX ?? null;
+      }}
+      onTouchEnd={(event) => {
+        const swipeStartX = swipeStartXRef.current;
+        const swipeEndX = event.changedTouches[0]?.clientX ?? null;
+
+        if (swipeStartX !== null && swipeEndX !== null && swipeEndX - swipeStartX >= 90) {
+          navigate("/");
+        }
+
+        swipeStartXRef.current = null;
+      }}
+    >
       <section className="relative overflow-hidden">
         <div className="absolute inset-0">
           <img

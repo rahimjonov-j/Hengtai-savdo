@@ -297,7 +297,7 @@ export default function JahonBozoriLanding() {
           <div className="w-full max-w-5xl">
             <div className="mx-auto w-full max-w-[56rem]">
               <h1 className="animate-fade-in-up text-[clamp(3rem,6vw,5.5rem)] font-black leading-[0.94] tracking-[-0.04em]">
-                <span className="block text-gradient-gold">Vodiyda yagona</span>
+                <span className="block whitespace-nowrap text-gradient-gold">Vodiyda yagona</span>
                 <span className="block text-foreground">33.3 gektarlik</span>
                 <span className="block text-gradient-gold">xalqaro bozor</span>
               </h1>

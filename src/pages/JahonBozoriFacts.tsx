@@ -1,3 +1,4 @@
+import { useEffect, useRef, useState } from "react";
 import fact4RailLogistics from "@/assets/fact-4-rail-logistics.png";
 import fact6ScaleAerial from "@/assets/fact-6-scale-aerial.png";
 import fact7Infrastructure from "@/assets/fact-7-infrastructure.png";
@@ -19,7 +20,7 @@ import {
   Sparkles,
   TrainTrack,
 } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Section } from "@/components/jahon-bozori/ScrollReveal";
 
 type FactItem = {
@@ -166,8 +167,58 @@ function FactCard({ fact }: { fact: FactItem }) {
 }
 
 export default function JahonBozoriFacts() {
+  const [showStickyFactsBar, setShowStickyFactsBar] = useState(false);
+  const navigate = useNavigate();
+  const swipeStartXRef = useRef<number | null>(null);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setShowStickyFactsBar(window.scrollY > 80);
+    };
+
+    handleScroll();
+    window.addEventListener("scroll", handleScroll, { passive: true });
+
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
   return (
-    <div className="min-h-screen overflow-x-hidden bg-background text-foreground">
+    <div
+      className="min-h-screen overflow-x-hidden bg-background text-foreground"
+      onTouchStart={(event) => {
+        swipeStartXRef.current = event.changedTouches[0]?.clientX ?? null;
+      }}
+      onTouchEnd={(event) => {
+        const swipeStartX = swipeStartXRef.current;
+        const swipeEndX = event.changedTouches[0]?.clientX ?? null;
+
+        if (swipeStartX !== null && swipeEndX !== null && swipeEndX - swipeStartX >= 90) {
+          navigate("/");
+        }
+
+        swipeStartXRef.current = null;
+      }}
+    >
+      <div
+        className={`fixed inset-x-0 top-0 z-50 transition-all duration-300 ${
+          showStickyFactsBar ? "translate-y-0 opacity-100" : "-translate-y-full opacity-0"
+        }`}
+      >
+        <div className="flex items-center justify-between gap-3 bg-background/85 px-4 py-3 shadow-[0_18px_50px_rgba(0,0,0,0.28)] backdrop-blur-xl sm:px-6 lg:px-8">
+          <Link
+            to="/"
+            className="inline-flex h-10 w-10 items-center justify-center text-muted-foreground transition-colors hover:text-primary"
+            aria-label="Orqaga"
+          >
+            <ArrowLeft className="h-4 w-4 shrink-0" />
+          </Link>
+
+          <div className="shrink-0 text-[0.7rem] font-semibold uppercase tracking-[0.22em] text-primary">
+            7 ta fakt
+          </div>
+        </div>
+      </div>
+
       <section className="relative overflow-hidden">
         <div className="absolute inset-0">
           <img src={heroImage} alt="Jahon Bozori umumiy ko'rinishi" className="h-full w-full object-cover" />

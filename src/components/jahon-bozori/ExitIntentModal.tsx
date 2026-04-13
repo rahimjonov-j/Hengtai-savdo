@@ -3,6 +3,7 @@ import { useToast } from "@/hooks/use-toast";
 import { X, User, Phone, MapPin, Loader2, CheckCircle2, Gift } from "lucide-react";
 import {
   emptyLeadFormErrors,
+  normalizePhoneInput,
   sanitizePhoneInput,
   validateFirstname,
   validateLeadForm,
@@ -74,7 +75,7 @@ export default function ExitIntentModal() {
       const res = await fetch(API_URL, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ firstname: firstname.trim(), phone }),
+        body: JSON.stringify({ firstname: firstname.trim(), phone: normalizePhoneInput(phone) }),
       });
       if (!res.ok) throw new Error("API error");
       setSubmitted(true);
@@ -181,7 +182,7 @@ export default function ExitIntentModal() {
                         phone: validatePhone(phone),
                       }))
                     }
-                    placeholder="+998901234567"
+                    placeholder="+998 99 444 98 68"
                     className={`w-full rounded-xl bg-secondary py-3 pl-12 pr-4 text-foreground outline-none transition-colors ${
                       errors.phone
                         ? "border border-destructive focus:border-destructive focus:ring-1 focus:ring-destructive/30"
