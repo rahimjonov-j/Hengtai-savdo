@@ -1,4 +1,11 @@
+import fact4RailLogistics from "@/assets/fact-4-rail-logistics.png";
+import fact6ScaleAerial from "@/assets/fact-6-scale-aerial.png";
+import fact7Infrastructure from "@/assets/fact-7-infrastructure.png";
 import heroImage from "@/assets/jahon-bozori-hero.webp";
+import galleryMainGate from "@/assets/gallery-main-gate.webp";
+import galleryRenderMasterplanOverview from "@/assets/gallery-render-masterplan-overview.webp";
+import galleryRenderSiteplanOverlay from "@/assets/gallery-render-siteplan-overlay.webp";
+import galleryRenderTerminalFront from "@/assets/gallery-render-terminal-front.webp";
 import {
   ArrowLeft,
   ArrowRight,
@@ -21,6 +28,8 @@ type FactItem = {
   headline: string;
   points: string[];
   impact: string;
+  image: string;
+  imageAlt: string;
   icon: LucideIcon;
   spanClass?: string;
 };
@@ -50,6 +59,8 @@ const facts: FactItem[] = [
       "Shahar ichidagi va tashqi xaridor oqimi bitta savdo nuqtasiga kesishadi.",
     ],
     impact: "Joylashuvning o'zi savdo uchun kuchli start beradi.",
+    image: galleryRenderSiteplanOverlay,
+    imageAlt: "Jahon Bozori hududining strategik joylashuvini ko'rsatadigan siteplan ko'rinishi",
     icon: MapPinned,
     spanClass: "xl:col-span-7",
   },
@@ -62,6 +73,8 @@ const facts: FactItem[] = [
       "Bu yo'l kundalik ko'rinish va tabiiy xaridor oqimini beradi.",
     ],
     impact: "Yo'l ustidagi savdo nuqtasi odamning ko'ziga har kuni tushadi.",
+    image: galleryMainGate,
+    imageAlt: "Jahon Bozori asosiy yo'l va kirish qismi ko'rinishi",
     icon: Route,
     spanClass: "xl:col-span-5",
   },
@@ -74,6 +87,8 @@ const facts: FactItem[] = [
       "Transport oqimi xaridorni bozor hududining o'ziga olib kiradi.",
     ],
     impact: "Bu yerda trafik reklama bilan emas, marshrutning o'zi bilan yaratiladi.",
+    image: galleryRenderTerminalFront,
+    imageAlt: "Transport oqimiga xizmat qiladigan terminal hududi render ko'rinishi",
     icon: Bus,
     spanClass: "xl:col-span-5",
   },
@@ -86,6 +101,8 @@ const facts: FactItem[] = [
       "Tez va qulay yetkazib berish savdo aylanishini kuchaytiradi.",
     ],
     impact: "Logistika kuchaysa, savdo hajmi va tezligi ham oshadi.",
+    image: fact4RailLogistics,
+    imageAlt: "Temir yo'l liniyasi bo'ylab joylashgan logistika hududi va yuk tashish jarayoni",
     icon: TrainTrack,
     spanClass: "xl:col-span-7",
   },
@@ -98,6 +115,8 @@ const facts: FactItem[] = [
       "Savdo nuqtasi va ta'minot tizimi bir joyga yig'iladi.",
     ],
     impact: "Mahalliy savdo xalqaro oqimga ulanadigan nuqtaga aylanadi.",
+    image: galleryRenderMasterplanOverview,
+    imageAlt: "Xalqaro logistika va savdo tizimini ko'rsatadigan umumiy masterplan ko'rinishi",
     icon: Globe2,
     spanClass: "xl:col-span-6",
   },
@@ -110,6 +129,8 @@ const facts: FactItem[] = [
       "Katta masshtab ko'proq kategoriya, ko'proq xaridor va ko'proq aylanish degani.",
     ],
     impact: "Katta loyiha katta oqimni o'ziga tortadi.",
+    image: fact6ScaleAerial,
+    imageAlt: "Katta masshtab va kuchli oqimni ko'rsatadigan yirik savdo hududi aerial ko'rinishi",
     icon: Building2,
     spanClass: "xl:col-span-6",
   },
@@ -122,6 +143,8 @@ const facts: FactItem[] = [
       "Ombor, logistika va parking bir joyda bo'lsa, biznes tezroq va barqarorroq ishlaydi.",
     ],
     impact: "Bu katta savdo qiluvchilar uchun ideal joy.",
+    image: fact7Infrastructure,
+    imageAlt: "Sovutkichli omborlar, parking va logistika infratuzilmasi ko'rinishi",
     icon: PackageCheck,
     spanClass: "xl:col-span-12",
   },
@@ -143,7 +166,17 @@ function FactCard({ fact }: { fact: FactItem }) {
           </div>
         </div>
 
-        <h2 className="mt-8 max-w-xl text-2xl font-black leading-tight text-foreground md:text-[2rem]">
+        <div className="mt-6 overflow-hidden rounded-[1.5rem] border border-white/10 bg-black/40 shadow-[0_20px_60px_rgba(0,0,0,0.22)]">
+          <img
+            src={fact.image}
+            alt={fact.imageAlt}
+            className="aspect-[16/9] w-full object-cover transition-transform duration-500 group-hover:scale-[1.04]"
+            loading="lazy"
+            decoding="async"
+          />
+        </div>
+
+        <h2 className="mt-6 max-w-xl text-2xl font-black leading-tight text-foreground md:text-[2rem]">
           {fact.title}
         </h2>
         <p className="mt-4 max-w-2xl text-base leading-7 text-muted-foreground md:text-[1.05rem]">

@@ -9,8 +9,8 @@ import omborImage from "@/assets/ombor.webp";
 import galleryTradeCourtyard from "@/assets/gallery-trade-courtyard.webp";
 import {
   type LucideIcon,
-  MapPin, ArrowDown, UserX, ChartNoAxesColumnDecreasing, MapPinOff,
-  Timer, ChevronDown, Send, ArrowRight,
+  MapPin, UserX, ChartNoAxesColumnDecreasing, MapPinOff,
+  Timer, ChevronDown, ArrowRight, X,
 } from "lucide-react";
 import { Link } from "react-router-dom";
 import DeferredSection from "@/components/DeferredSection";
@@ -27,8 +27,6 @@ function scrollToForm() {
   const el = document.getElementById("lead-form");
   if (el) el.scrollIntoView({ behavior: "smooth" });
 }
-
-const TELEGRAM_URL = "https://t.me/jahonbozorivodiy";
 
 type StrengthCard =
   | {
@@ -105,20 +103,6 @@ function BandQilishButton({ size = "lg", className = "" }: { size?: "lg" | "sm";
   );
 }
 
-function TelegramButton({ className = "" }: { className?: string }) {
-  return (
-    <a
-      href={TELEGRAM_URL}
-      target="_blank"
-      rel="noreferrer"
-      className={`bg-gradient-gold font-bold rounded-full inline-flex items-center justify-center gap-2 px-8 py-4 text-lg text-primary-foreground transition-all hover:scale-105 active:scale-95 animate-pulse-glow ${className}`}
-    >
-      <Send className="w-5 h-5" />
-      Telegramga o'tish
-    </a>
-  );
-}
-
 function FactsLink({ className = "" }: { className?: string }) {
   return (
     <Link
@@ -154,6 +138,8 @@ type TrackingWindow = Window & {
 
 export default function JahonBozoriLanding() {
   const [shouldMountExitIntentModal, setShouldMountExitIntentModal] = useState(false);
+  const [activeStrengthCardIndex, setActiveStrengthCardIndex] = useState<number | null>(null);
+  const activeStrengthCard = activeStrengthCardIndex !== null ? strengthCards[activeStrengthCardIndex] : null;
 
   useEffect(() => {
     const trackingWindow = window as TrackingWindow;
@@ -184,6 +170,25 @@ export default function JahonBozoriLanding() {
     const timeoutId = window.setTimeout(enableModal, 1200);
     return () => window.clearTimeout(timeoutId);
   }, []);
+
+  useEffect(() => {
+    if (activeStrengthCardIndex === null) return;
+
+    const previousOverflow = document.body.style.overflow;
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setActiveStrengthCardIndex(null);
+      }
+    };
+
+    document.body.style.overflow = "hidden";
+    window.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [activeStrengthCardIndex]);
 
   return (
     <div className="min-h-screen bg-background text-foreground overflow-x-hidden">
@@ -230,7 +235,6 @@ export default function JahonBozoriLanding() {
               </p>
               <div className="mt-10 flex flex-col items-center justify-center gap-4 animate-fade-in-up animate-delay-400 sm:flex-row">
                 <BandQilishButton className="min-w-[17rem]" />
-                <TelegramButton className="min-w-[17rem]" />
               </div>
             </div>
           </div>
@@ -274,9 +278,8 @@ export default function JahonBozoriLanding() {
               </div>
             ))}
           </div>
-          <div className="flex items-center justify-center gap-2 text-xl md:text-2xl font-bold text-gradient-gold">
+          <div className="text-xl md:text-2xl font-bold text-gradient-gold">
             Bu loyiha aynan shu muammoni hal qiladi
-            <ArrowDown className="w-6 h-6 text-primary" />
           </div>
         </Section>
       </section>
@@ -289,9 +292,11 @@ export default function JahonBozoriLanding() {
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {strengthCards.map((item, i) => (
-              <div
+              <button
                 key={i}
-                className={`glass-card group rounded-2xl transition-colors hover:border-primary/30 ${
+                type="button"
+                onClick={() => setActiveStrengthCardIndex(i)}
+                className={`glass-card group w-full rounded-2xl text-left transition-all duration-300 hover:border-primary/30 hover:scale-[1.01] ${
                   item.image ? "overflow-hidden p-4 md:p-5" : "p-6 md:p-8"
                 }`}
               >
@@ -313,7 +318,7 @@ export default function JahonBozoriLanding() {
                 )}
                 <h3 className="text-xl md:text-2xl font-bold text-foreground mb-2">{item.title}</h3>
                 <p className="text-muted-foreground">{item.desc}</p>
-              </div>
+              </button>
             ))}
           </div>
           <div className="text-center mt-10">
@@ -392,7 +397,7 @@ export default function JahonBozoriLanding() {
       </DeferredSection>
 
       {/* CTA — bottom form repeat */}
-      <section className="py-20 md:py-28 px-6 bg-card/50">
+      <section className="px-6 pb-12 pt-20 bg-card/50 md:pb-14 md:pt-24">
         <Section className="max-w-xl mx-auto">
           <h2 className="text-3xl md:text-5xl font-black text-center text-foreground mb-4">
             <span className="text-gradient-gold">Hoziroq joy band qiling</span>
@@ -404,12 +409,81 @@ export default function JahonBozoriLanding() {
         </Section>
       </section>
 
-      {/* STICKY CTA */}
-      <div className="fixed bottom-6 left-1/2 z-50 -translate-x-1/2 md:hidden">
-        <BandQilishButton size="sm" className="shadow-2xl" />
+      <footer className="border-t border-white/10 bg-card/30 px-6 py-4 md:py-5">
+        <div className="mx-auto max-w-6xl text-center">
+          <p className="text-sm text-muted-foreground md:text-base">
+            &copy; 2026 Jahon Bozori. Designed and developed by{" "}
+            <a
+              href="https://www.zamon-agency.uz/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="font-semibold text-primary transition-colors hover:text-primary/80 hover:underline"
+            >
+              Zamon Agency
+            </a>
+            .
+          </p>
+        </div>
+      </footer>
+
+      {activeStrengthCard ? (
+        <div
+          className="fixed inset-0 z-[70] flex items-center justify-center bg-black/78 px-4 py-6 backdrop-blur-sm animate-in fade-in-0 duration-300"
+          onClick={() => setActiveStrengthCardIndex(null)}
+        >
+          <div
+            role="dialog"
+            aria-modal="true"
+            className="relative w-full max-w-4xl overflow-hidden rounded-[2rem] border border-white/10 bg-background/95 p-4 shadow-[0_30px_120px_rgba(0,0,0,0.55)] animate-in zoom-in-95 slide-in-from-bottom-4 duration-300 md:p-6"
+            onClick={(event) => event.stopPropagation()}
+          >
+            <button
+              type="button"
+              aria-label="Yopish"
+              onClick={() => setActiveStrengthCardIndex(null)}
+              className="absolute right-4 top-4 z-10 inline-flex h-11 w-11 items-center justify-center rounded-full border border-white/10 bg-black/45 text-foreground transition-colors hover:border-primary/40 hover:text-primary"
+            >
+              <X className="h-5 w-5" />
+            </button>
+
+            {activeStrengthCard.image ? (
+              <div className="relative overflow-hidden rounded-[1.6rem] border border-white/10 bg-black/60">
+                <img
+                  src={activeStrengthCard.image}
+                  alt={activeStrengthCard.alt}
+                  className="aspect-[16/9] w-full object-cover brightness-[0.86] contrast-110 saturate-[0.98]"
+                  loading="lazy"
+                  decoding="async"
+                />
+                <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(255,199,74,0.18),transparent_42%)]" />
+                <div className="absolute inset-0 bg-gradient-to-b from-black/0 via-black/10 to-black/45" />
+              </div>
+            ) : (
+              <div className="flex aspect-[16/9] items-center justify-center rounded-[1.6rem] border border-white/10 bg-black/40">
+                <activeStrengthCard.icon className="h-16 w-16 text-primary" />
+              </div>
+            )}
+
+            <div className="px-1 pb-1 pt-6 md:px-2">
+              <h3 className="text-2xl font-black text-foreground md:text-3xl">
+                {activeStrengthCard.title}
+              </h3>
+              <p className="mt-3 text-base leading-relaxed text-muted-foreground md:text-lg">
+                {activeStrengthCard.desc}
+              </p>
+            </div>
+          </div>
+        </div>
+      ) : null}
+
+      <div className="fixed inset-x-0 bottom-0 z-50 md:hidden">
+        <BandQilishButton
+          size="sm"
+          className="w-full rounded-none px-6 py-4 text-base shadow-[0_-18px_40px_rgba(0,0,0,0.28)] animate-none"
+        />
       </div>
 
-      <div className="h-24" />
+      <div className="h-16 md:hidden" />
     </div>
   );
 }
