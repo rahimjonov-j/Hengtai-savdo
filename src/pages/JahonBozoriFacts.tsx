@@ -26,7 +26,6 @@ type FactItem = {
   id: string;
   title: string;
   headline: string;
-  points: string[];
   impact: string;
   image: string;
   imageAlt: string;
@@ -37,15 +36,15 @@ type FactItem = {
 const stats = [
   {
     value: "2 ta katta oqim",
-    label: "Farg'ona shahri va Yangi Marg'ilon oralig'idagi strategik nuqta",
+    label: "Strategik nuqta",
   },
   {
     value: "4500+ do'kon",
-    label: "Katta masshtab savdo oqimini o'ziga tortadigan asosiy omillardan biri",
+    label: "Katta savdo masshtabi",
   },
   {
     value: "Majburiy trafik",
-    label: "Transport va asosiy yo'l oqimi bozor ichiga kirib keladigan model",
+    label: "Oqim bozor ichiga kiradi",
   },
 ];
 
@@ -53,12 +52,8 @@ const facts: FactItem[] = [
   {
     id: "1-fakt",
     title: "Strategik joylashuv",
-    headline: "Bozor Farg'ona shahri va Yangi Marg'ilon massivi o'rtasida joylashgan.",
-    points: [
-      "Bu degani loyiha bir vaqtning o'zida 2 ta katta oqim markazida turibdi.",
-      "Shahar ichidagi va tashqi xaridor oqimi bitta savdo nuqtasiga kesishadi.",
-    ],
-    impact: "Joylashuvning o'zi savdo uchun kuchli start beradi.",
+    headline: "Farg'ona shahri va Yangi Marg'ilon oralig'idagi eng kuchli savdo nuqta.",
+    impact: "Joylashuvning o'zi oqim yaratadi.",
     image: galleryRenderSiteplanOverlay,
     imageAlt: "Jahon Bozori hududining strategik joylashuvini ko'rsatadigan siteplan ko'rinishi",
     icon: MapPinned,
@@ -67,12 +62,8 @@ const facts: FactItem[] = [
   {
     id: "2-fakt",
     title: "Asosiy yo'lda",
-    headline: "Jahon Bozori Farg'ona darvozasi oldida, Qo'qon, Namangan va Toshkent yo'nalishidagi asosiy yo'l ustida joylashgan.",
-    points: [
-      "Rishton, Oltiariq, Bag'dod va boshqa hududlardan keladiganlar aynan shu yo'ldan o'tadi.",
-      "Bu yo'l kundalik ko'rinish va tabiiy xaridor oqimini beradi.",
-    ],
-    impact: "Yo'l ustidagi savdo nuqtasi odamning ko'ziga har kuni tushadi.",
+    headline: "Qo'qon, Namangan va Toshkent yo'nalishidagi asosiy yo'l ustida joylashgan.",
+    impact: "Ko'rinish doimiy bo'lsa, xaridor ham doimiy bo'ladi.",
     image: galleryMainGate,
     imageAlt: "Jahon Bozori asosiy yo'l va kirish qismi ko'rinishi",
     icon: Route,
@@ -81,12 +72,8 @@ const facts: FactItem[] = [
   {
     id: "3-fakt",
     title: "Doimiy transport oqimi",
-    headline: "Avtobuslar aynan shu yo'ldan yuradi va oxirgi bekat Jahon Bozori ichida bo'ladi.",
-    points: [
-      "Bu shunchaki o'tib ketadigan emas, to'xtaydigan trafik degani.",
-      "Transport oqimi xaridorni bozor hududining o'ziga olib kiradi.",
-    ],
-    impact: "Bu yerda trafik reklama bilan emas, marshrutning o'zi bilan yaratiladi.",
+    headline: "Avtobuslar shu yo'ldan yuradi va oxirgi bekat bozor ichida bo'ladi.",
+    impact: "Bu yerda trafik to'xtaydigan trafik.",
     image: galleryRenderTerminalFront,
     imageAlt: "Transport oqimiga xizmat qiladigan terminal hududi render ko'rinishi",
     icon: Bus,
@@ -96,11 +83,7 @@ const facts: FactItem[] = [
     id: "4-fakt",
     title: "Temir yo'l logistikasi",
     headline: "Temir yo'l liniyasi yaqin va bozor yonidan o'tishi rejalashtirilgan.",
-    points: [
-      "Bu yuk tashish xarajatini kamaytirish imkonini oshiradi.",
-      "Tez va qulay yetkazib berish savdo aylanishini kuchaytiradi.",
-    ],
-    impact: "Logistika kuchaysa, savdo hajmi va tezligi ham oshadi.",
+    impact: "Kuchli logistika savdo tezligini oshiradi.",
     image: fact4RailLogistics,
     imageAlt: "Temir yo'l liniyasi bo'ylab joylashgan logistika hududi va yuk tashish jarayoni",
     icon: TrainTrack,
@@ -109,12 +92,8 @@ const facts: FactItem[] = [
   {
     id: "5-fakt",
     title: "Xalqaro logistika markazi",
-    headline: "Bozor ichida logistika tizimi bo'ladi va export, import shu yerning o'zida ishlaydi.",
-    points: [
-      "Xitoy, Markaziy Osiyo va Yevropa bilan bog'lanadigan savdo zanjiri rejalashtirilgan.",
-      "Savdo nuqtasi va ta'minot tizimi bir joyga yig'iladi.",
-    ],
-    impact: "Mahalliy savdo xalqaro oqimga ulanadigan nuqtaga aylanadi.",
+    headline: "Export va import jarayoni shu hududning o'zida ishlaydi.",
+    impact: "Mahalliy savdo xalqaro oqimga ulanadi.",
     image: galleryRenderMasterplanOverview,
     imageAlt: "Xalqaro logistika va savdo tizimini ko'rsatadigan umumiy masterplan ko'rinishi",
     icon: Globe2,
@@ -123,12 +102,8 @@ const facts: FactItem[] = [
   {
     id: "6-fakt",
     title: "Katta masshtab, katta oqim",
-    headline: "33.3 gektar hudud va 4500+ do'kon bu loyihani oddiy bozordan ancha katta formatga olib chiqadi.",
-    points: [
-      "Bu Vodiyning asosiy savdo markaziga aylanish ehtimolini sezilarli oshiradi.",
-      "Katta masshtab ko'proq kategoriya, ko'proq xaridor va ko'proq aylanish degani.",
-    ],
-    impact: "Katta loyiha katta oqimni o'ziga tortadi.",
+    headline: "33.3 gektar va 4500+ do'kon bu loyihani oddiy bozordan ancha katta qiladi.",
+    impact: "Katta loyiha katta oqimni tortadi.",
     image: fact6ScaleAerial,
     imageAlt: "Katta masshtab va kuchli oqimni ko'rsatadigan yirik savdo hududi aerial ko'rinishi",
     icon: Building2,
@@ -137,12 +112,8 @@ const facts: FactItem[] = [
   {
     id: "7-fakt",
     title: "Infratuzilma tayyor",
-    headline: "Sovutkichli omborlar, logistika zonasi va qulay avtoturargohlar katta savdo uchun zarur tayanchni yaratadi.",
-    points: [
-      "Bu ayniqsa hajm bilan ishlaydigan tadbirkorlar uchun katta qulaylik beradi.",
-      "Ombor, logistika va parking bir joyda bo'lsa, biznes tezroq va barqarorroq ishlaydi.",
-    ],
-    impact: "Bu katta savdo qiluvchilar uchun ideal joy.",
+    headline: "Sovutkichli omborlar, logistika zonasi va parking katta savdo uchun tayyor.",
+    impact: "Bu biznes uchun tayyor infratuzilma.",
     image: fact7Infrastructure,
     imageAlt: "Sovutkichli omborlar, parking va logistika infratuzilmasi ko'rinishi",
     icon: PackageCheck,
@@ -183,16 +154,7 @@ function FactCard({ fact }: { fact: FactItem }) {
           {fact.headline}
         </p>
 
-        <div className="mt-6 space-y-3">
-          {fact.points.map((point) => (
-            <div key={point} className="flex items-start gap-3">
-              <span className="mt-2 h-2 w-2 shrink-0 rounded-full bg-primary" />
-              <p className="text-sm leading-6 text-foreground/85 md:text-[0.98rem]">{point}</p>
-            </div>
-          ))}
-        </div>
-
-        <div className="mt-7 rounded-[1.4rem] border border-primary/15 bg-black/25 px-4 py-4">
+        <div className="mt-6 rounded-[1.4rem] border border-primary/15 bg-black/25 px-4 py-4">
           <div className="flex items-start gap-3">
             <Sparkles className="mt-0.5 h-5 w-5 shrink-0 text-primary" />
             <p className="text-sm font-semibold leading-6 text-primary md:text-[0.98rem]">{fact.impact}</p>
@@ -233,8 +195,7 @@ export default function JahonBozoriFacts() {
                   <span className="block text-gradient-gold">mijoz oqimi bo'ladimi?</span>
                 </h1>
                 <p className="mt-6 max-w-2xl text-base leading-relaxed text-muted-foreground sm:text-lg md:text-[1.05rem]">
-                  Ko'pchilik bitta savol beradi: "Bu joyda savdo yuradimi o'zi?" Bu sahifa javobni gap bilan
-                  emas, aniq faktlar bilan beradi.
+                  Bu savolga javob oddiy: oqim bu yerga tasodifan emas, tizim bo'yicha keladi.
                 </p>
               </div>
 
@@ -249,8 +210,7 @@ export default function JahonBozoriFacts() {
                     Oqimning o'zi shu nuqtaga yig'iladigan qilib loyihalangan.
                   </p>
                   <p className="mt-5 text-sm leading-6 text-muted-foreground">
-                    Strategik joylashuv, asosiy yo'l, transport, logistika va katta masshtab bir joyda
-                    to'planganda xaridor oqimi tasodif emas, tizimga aylanadi.
+                    Joylashuv, yo'l, transport va logistika bir joyda jamlangan.
                   </p>
                 </div>
               </div>
@@ -283,8 +243,7 @@ export default function JahonBozoriFacts() {
               Xaridor oqimini ko'rsatadigan <span className="text-gradient-gold">7 ta asosiy fakt</span>
             </h2>
             <p className="mt-4 text-base leading-7 text-muted-foreground md:text-lg">
-              Bu 7 ta fakt Jahon Bozori nega kuchli savdo nuqtasiga aylanishini ko'rsatadi: strategik joylashuv,
-              asosiy yo'l, doimiy transport oqimi, logistika, katta masshtab va tayyor infratuzilma.
+              Faqat eng muhim 7 ta sabab: joylashuv, yo'l, transport, logistika, masshtab va infratuzilma.
             </p>
           </div>
 
@@ -309,8 +268,7 @@ export default function JahonBozoriFacts() {
                 Yo'q. Odamlar o'zi kelishga majbur bo'ladi.
               </p>
               <p className="mx-auto mt-6 max-w-2xl text-base leading-7 text-muted-foreground md:text-lg">
-                Siz ham shunday oqim markazida o'z do'koningiz bo'lishini istaysizmi? Asosiy sahifaga qaytib
-                loyiha bilan yana bir bor tanishing.
+                Asosiy sahifaga qayting va loyihani ko'ring.
               </p>
               <Link
                 to="/"

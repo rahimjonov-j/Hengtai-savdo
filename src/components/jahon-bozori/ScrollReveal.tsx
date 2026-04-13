@@ -5,6 +5,18 @@ export function useScrollReveal() {
   const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
+    const host = ref.current;
+    if (!host) return;
+
+    if (typeof IntersectionObserver === "undefined") {
+      setIsVisible(true);
+      return;
+    }
+
+    const fallbackId = window.setTimeout(() => {
+      setIsVisible(true);
+    }, 350);
+
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
@@ -12,10 +24,15 @@ export function useScrollReveal() {
           observer.disconnect();
         }
       },
-      { threshold: 0.15 }
+      { threshold: 0.01, rootMargin: "0px 0px -8% 0px" }
     );
-    if (ref.current) observer.observe(ref.current);
-    return () => observer.disconnect();
+
+    observer.observe(host);
+
+    return () => {
+      window.clearTimeout(fallbackId);
+      observer.disconnect();
+    };
   }, []);
 
   return { ref, isVisible };

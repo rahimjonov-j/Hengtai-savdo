@@ -1,5 +1,6 @@
-import { useEffect, useState } from "react";
-import { ChevronDown, ChevronLeft, ChevronRight, ChevronUp, X } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
+import { ArrowLeft, ChevronDown, ChevronLeft, ChevronRight, ChevronUp } from "lucide-react";
 import { Section } from "./ScrollReveal";
 import gallery1 from "@/assets/gallery-1.webp";
 import galleryCoveredWalkway from "@/assets/gallery-covered-walkway.webp";
@@ -51,13 +52,16 @@ export default function GallerySection() {
   const [showAllImages, setShowAllImages] = useState(false);
   const [selectedImageIndex, setSelectedImageIndex] = useState<number | null>(null);
   const [loadedImages, setLoadedImages] = useState<Record<number, boolean>>({});
+  const imageViewerOverlaySwipeStartXRef = useRef<number | null>(null);
+  const imageViewerImageSwipeStartXRef = useRef<number | null>(null);
   const hasSelectedImage = selectedImageIndex !== null;
   const activeImageIndex = selectedImageIndex ?? 0;
+
   const toggleButton = (
     <button
       type="button"
       onClick={() => setShowAllImages((prev) => !prev)}
-      className="inline-flex items-center gap-2 text-lg md:text-xl font-bold text-primary transition-colors hover:text-primary/80"
+      className="inline-flex items-center gap-2 text-lg font-bold text-primary transition-colors hover:text-primary/80 md:text-xl"
     >
       {showAllImages ? "Kamroq ko'rish" : "Barcha rasmlar"}
       {showAllImages ? <ChevronUp className="h-5 w-5" /> : <ChevronDown className="h-5 w-5" />}
@@ -87,8 +91,10 @@ export default function GallerySection() {
   useEffect(() => {
     if (selectedImageIndex === null) return;
 
-    const previousOverflow = document.body.style.overflow;
+    const previousBodyOverflow = document.body.style.overflow;
+    const previousHtmlOverflow = document.documentElement.style.overflow;
     document.body.style.overflow = "hidden";
+    document.documentElement.style.overflow = "hidden";
 
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
@@ -110,7 +116,8 @@ export default function GallerySection() {
     window.addEventListener("keydown", handleKeyDown);
 
     return () => {
-      document.body.style.overflow = previousOverflow;
+      document.body.style.overflow = previousBodyOverflow;
+      document.documentElement.style.overflow = previousHtmlOverflow;
       window.removeEventListener("keydown", handleKeyDown);
     };
   }, [selectedImageIndex]);
@@ -240,17 +247,21 @@ export default function GallerySection() {
       key={index}
       type="button"
       onClick={() => openImageViewer(index)}
-      className="relative aspect-[4/3] rounded-2xl overflow-hidden glass-card bg-black/20 text-left"
+      className="relative aspect-[4/3] overflow-hidden rounded-2xl bg-black/20 text-left glass-card"
       aria-label={`Jahon Bozori ko'rinishi ${index + 1} rasmini kattalashtirish`}
     >
       <div
         aria-hidden="true"
-        className={`absolute inset-0 bg-[linear-gradient(135deg,rgba(255,255,255,0.08),rgba(255,255,255,0.02))] transition-opacity duration-300 ${loadedImages[index] ? "opacity-0" : "animate-pulse opacity-100"}`}
+        className={`absolute inset-0 bg-[linear-gradient(135deg,rgba(255,255,255,0.08),rgba(255,255,255,0.02))] transition-opacity duration-300 ${
+          loadedImages[index] ? "opacity-0" : "animate-pulse opacity-100"
+        }`}
       />
       <img
         src={src}
         alt={`Jahon Bozori ko'rinishi ${index + 1}`}
-        className={`h-full w-full cursor-zoom-in object-cover transition-[transform,opacity] duration-500 ${loadedImages[index] ? "opacity-100 hover:scale-105" : "opacity-0"}`}
+        className={`h-full w-full cursor-zoom-in object-cover transition-[transform,opacity] duration-500 ${
+          loadedImages[index] ? "opacity-100 hover:scale-105" : "opacity-0"
+        }`}
         loading={index < PREVIEW_IMAGE_COUNT ? "eager" : "lazy"}
         fetchPriority={index < 2 ? "high" : "auto"}
         decoding="async"
@@ -259,68 +270,79 @@ export default function GallerySection() {
     </button>
   );
 
-  return (
-    <section className="py-20 md:py-28 px-6">
-      <Section className="max-w-6xl mx-auto">
-        <h2 className="text-3xl md:text-5xl font-black text-center mb-14">
-          <span className="text-gradient-gold">Loyiha</span> ko'rinishi
-        </h2>
-        <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-          {previewImages.map((src, i) => renderImageCard(src, i))}
-        </div>
-
-        {extraImages.length > 0 && !showAllImages && (
-          <div className="mt-6 text-center">
-            {toggleButton}
-          </div>
-        )}
-
-        {showAllImages && (
-          <div className="mt-6">
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-              {extraImages.map((src, i) => renderImageCard(src, previewImages.length + i))}
-            </div>
-
-            <div className="mt-6 text-center">
-              {toggleButton}
-            </div>
-          </div>
-        )}
-
-        {hasSelectedImage && (
+  const imageViewerModal =
+    hasSelectedImage && typeof document !== "undefined"
+      ? createPortal(
           <div
-            className="fixed inset-0 z-[120] bg-black/85 backdrop-blur-sm px-3 py-4 md:px-6 md:py-6"
+            className="fixed inset-0 z-[120] flex items-center justify-center overflow-hidden bg-black/90 backdrop-blur-md"
             onClick={closeImageViewer}
             role="dialog"
             aria-modal="true"
             aria-label={`Jahon Bozori ko'rinishi ${activeImageIndex + 1}`}
           >
-            <div className="mx-auto flex h-full max-w-[1500px] flex-col" onClick={(event) => event.stopPropagation()}>
-              <div className="flex items-center justify-between gap-3 rounded-2xl border border-white/10 bg-black/45 px-3 py-3 text-white backdrop-blur-sm md:px-5">
-                <div className="flex items-center gap-3">
-                  <div className="rounded-full border border-white/10 bg-white/10 px-4 py-2 text-sm font-semibold backdrop-blur-sm">
-                    {activeImageIndex + 1} / {images.length}
-                  </div>
-                  <p className="hidden text-sm text-white/70 md:block">
-                    `Esc` yoki tashqariga bosib yopishingiz mumkin
-                  </p>
-                </div>
+            <div
+              className="flex h-full w-full max-w-[1800px] flex-col px-3 py-3 md:px-6 md:py-5"
+              onClick={(event) => event.stopPropagation()}
+              onTouchStart={(event) => {
+                imageViewerOverlaySwipeStartXRef.current = event.changedTouches[0]?.clientX ?? null;
+              }}
+              onTouchEnd={(event) => {
+                const swipeStartX = imageViewerOverlaySwipeStartXRef.current;
+                const swipeEndX = event.changedTouches[0]?.clientX ?? null;
+
+                if (swipeStartX !== null && swipeEndX !== null && swipeEndX - swipeStartX >= 80) {
+                  closeImageViewer();
+                }
+
+                imageViewerOverlaySwipeStartXRef.current = null;
+              }}
+            >
+              <div className="mb-3 flex items-center justify-between gap-3 rounded-2xl border border-white/10 bg-black/45 px-3 py-3 text-white backdrop-blur-sm md:px-5">
                 <button
                   type="button"
                   onClick={closeImageViewer}
-                  className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/10 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-white/20"
-                  aria-label="Rasmni yopish"
+                  className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/10 px-4 py-2 text-sm font-semibold text-white transition-colors hover:border-primary/40 hover:text-primary"
                 >
-                  <X className="h-4 w-4" />
-                  Yopish
+                  <ArrowLeft className="h-4 w-4" />
+                  Orqaga
                 </button>
+
+                <div className="rounded-full border border-white/10 bg-white/10 px-4 py-2 text-sm font-semibold backdrop-blur-sm">
+                  {activeImageIndex + 1} / {images.length}
+                </div>
               </div>
 
-              <div className="relative mt-3 flex min-h-0 flex-1 items-center justify-center overflow-hidden rounded-[1.75rem] border border-white/10 bg-black/35 px-2 py-2 md:px-4 md:py-4">
+              <div
+                className="relative flex min-h-0 flex-1 items-center justify-center overflow-hidden rounded-[1.8rem] border border-white/10 bg-black/35 px-2 py-2 md:px-4 md:py-4"
+                onTouchStart={(event) => {
+                  event.stopPropagation();
+                  imageViewerImageSwipeStartXRef.current = event.changedTouches[0]?.clientX ?? null;
+                }}
+                onTouchEnd={(event) => {
+                  event.stopPropagation();
+                  const swipeStartX = imageViewerImageSwipeStartXRef.current;
+                  const swipeEndX = event.changedTouches[0]?.clientX ?? null;
+
+                  if (swipeStartX !== null && swipeEndX !== null) {
+                    const swipeDistance = swipeEndX - swipeStartX;
+
+                    if (swipeDistance >= 80) {
+                      closeImageViewer();
+                    } else if (swipeDistance <= -80) {
+                      goToNextImage();
+                    }
+                  }
+
+                  imageViewerImageSwipeStartXRef.current = null;
+                }}
+              >
                 <div
                   aria-hidden="true"
-                  className={`absolute inset-0 bg-[linear-gradient(135deg,rgba(255,255,255,0.08),rgba(255,255,255,0.02))] transition-opacity duration-300 ${loadedImages[activeImageIndex] ? "opacity-0" : "animate-pulse opacity-100"}`}
+                  className={`absolute inset-0 bg-[linear-gradient(135deg,rgba(255,255,255,0.08),rgba(255,255,255,0.02))] transition-opacity duration-300 ${
+                    loadedImages[activeImageIndex] ? "opacity-0" : "animate-pulse opacity-100"
+                  }`}
                 />
+
                 <img
                   src={images[activeImageIndex]}
                   alt={`Jahon Bozori ko'rinishi ${activeImageIndex + 1}`}
@@ -328,7 +350,9 @@ export default function GallerySection() {
                   fetchPriority="high"
                   decoding="async"
                   onLoad={() => markImageLoaded(activeImageIndex)}
-                  className={`relative z-10 max-h-full max-w-full object-contain transition-opacity duration-300 ${loadedImages[activeImageIndex] ? "opacity-100" : "opacity-0"}`}
+                  className={`relative z-10 max-h-full max-w-full object-contain transition-opacity duration-300 ${
+                    loadedImages[activeImageIndex] ? "opacity-100" : "opacity-0"
+                  }`}
                 />
 
                 <button
@@ -352,34 +376,38 @@ export default function GallerySection() {
                 </button>
               </div>
 
-              <div className="mt-3 overflow-x-auto pb-1">
-                <div className="flex min-w-max items-center gap-2">
-                  {images.map((_, index) => (
-                    <button
-                      key={index}
-                      type="button"
-                      onClick={() => setSelectedImageIndex(index)}
-                      className={`overflow-hidden rounded-xl border transition-all ${
-                        index === activeImageIndex
-                          ? "border-primary shadow-[0_0_0_1px_rgba(214,158,0,0.45)]"
-                          : "border-white/10 opacity-70 hover:opacity-100"
-                      }`}
-                      aria-label={`${index + 1}-rasmga o'tish`}
-                    >
-                      <img
-                        src={images[index]}
-                        alt={`Jahon Bozori preview ${index + 1}`}
-                        className="h-14 w-20 object-cover md:h-16 md:w-24"
-                        loading="lazy"
-                        decoding="async"
-                      />
-                    </button>
-                  ))}
-                </div>
-              </div>
             </div>
+          </div>,
+          document.body
+        )
+      : null;
+
+  return (
+    <section className="px-6 py-20 md:py-28">
+      <Section className="mx-auto max-w-6xl">
+        <h2 className="mb-14 text-center text-3xl font-black md:text-5xl">
+          <span className="text-gradient-gold">Loyiha</span> ko'rinishi
+        </h2>
+
+        <div className="grid grid-cols-2 gap-4 md:grid-cols-3">
+          {previewImages.map((src, index) => renderImageCard(src, index))}
+        </div>
+
+        {extraImages.length > 0 && !showAllImages ? (
+          <div className="mt-6 text-center">{toggleButton}</div>
+        ) : null}
+
+        {showAllImages ? (
+          <div className="mt-6">
+            <div className="grid grid-cols-2 gap-4 md:grid-cols-3">
+              {extraImages.map((src, index) => renderImageCard(src, previewImages.length + index))}
+            </div>
+
+            <div className="mt-6 text-center">{toggleButton}</div>
           </div>
-        )}
+        ) : null}
+
+        {imageViewerModal}
       </Section>
     </section>
   );
