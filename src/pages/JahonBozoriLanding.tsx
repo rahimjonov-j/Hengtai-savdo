@@ -296,7 +296,7 @@ export default function JahonBozoriLanding() {
         <div className="relative z-10 mx-auto flex min-h-screen w-full max-w-6xl items-center justify-center px-6 pb-24 pt-28 text-center sm:px-8 md:pt-32 lg:px-10 lg:pb-28">
           <div className="w-full max-w-5xl">
             <div className="mx-auto w-full max-w-[56rem]">
-              <h1 className="animate-fade-in-up text-[clamp(3rem,6vw,5.5rem)] font-black leading-[0.94] tracking-[-0.04em]">
+              <h1 className="animate-fade-in-up pb-3 text-[clamp(2.3rem,10vw,5.5rem)] font-black leading-[1.08] tracking-[-0.04em] sm:text-[clamp(3rem,6vw,5.5rem)]">
                 <span className="block whitespace-nowrap text-gradient-gold">Vodiyda yagona</span>
                 <span className="block text-foreground">33.3 gektarlik</span>
                 <span className="block text-gradient-gold">xalqaro bozor</span>
