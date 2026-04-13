@@ -1,7 +1,6 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { ChevronDown, ChevronLeft, ChevronRight, ChevronUp, X } from "lucide-react";
 import { Section } from "./ScrollReveal";
-import { Carousel, CarouselContent, CarouselItem, type CarouselApi } from "@/components/ui/carousel";
 import gallery1 from "@/assets/gallery-1.webp";
 import galleryCoveredWalkway from "@/assets/gallery-covered-walkway.webp";
 import galleryWaterfrontBoulevard from "@/assets/gallery-waterfront-boulevard.webp";
@@ -52,9 +51,6 @@ export default function GallerySection() {
   const [showAllImages, setShowAllImages] = useState(false);
   const [selectedImageIndex, setSelectedImageIndex] = useState<number | null>(null);
   const [loadedImages, setLoadedImages] = useState<Record<number, boolean>>({});
-  const [carouselApi, setCarouselApi] = useState<CarouselApi>();
-  const pendingJumpToIndexRef = useRef<number | null>(null);
-  const wheelNavigationAtRef = useRef(0);
   const hasSelectedImage = selectedImageIndex !== null;
   const activeImageIndex = selectedImageIndex ?? 0;
   const toggleButton = (
@@ -73,8 +69,19 @@ export default function GallerySection() {
   };
 
   const openImageViewer = (index: number) => {
-    pendingJumpToIndexRef.current = index;
     setSelectedImageIndex(index);
+  };
+
+  const closeImageViewer = () => {
+    setSelectedImageIndex(null);
+  };
+
+  const goToPreviousImage = () => {
+    setSelectedImageIndex((current) => (current === null ? 0 : Math.max(0, current - 1)));
+  };
+
+  const goToNextImage = () => {
+    setSelectedImageIndex((current) => (current === null ? 0 : Math.min(images.length - 1, current + 1)));
   };
 
   useEffect(() => {
@@ -85,38 +92,18 @@ export default function GallerySection() {
 
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
-        setSelectedImageIndex(null);
+        closeImageViewer();
         return;
       }
 
       if (event.key === "ArrowLeft") {
         event.preventDefault();
-
-        if (carouselApi) {
-          carouselApi.scrollPrev();
-          return;
-        }
-
-        setSelectedImageIndex((current) => {
-          const nextIndex = current === null ? 0 : Math.max(0, current - 1);
-          pendingJumpToIndexRef.current = nextIndex;
-          return nextIndex;
-        });
+        goToPreviousImage();
       }
 
       if (event.key === "ArrowRight") {
         event.preventDefault();
-
-        if (carouselApi) {
-          carouselApi.scrollNext();
-          return;
-        }
-
-        setSelectedImageIndex((current) => {
-          const nextIndex = current === null ? 0 : Math.min(images.length - 1, current + 1);
-          pendingJumpToIndexRef.current = nextIndex;
-          return nextIndex;
-        });
+        goToNextImage();
       }
     };
 
@@ -126,36 +113,7 @@ export default function GallerySection() {
       document.body.style.overflow = previousOverflow;
       window.removeEventListener("keydown", handleKeyDown);
     };
-  }, [carouselApi, selectedImageIndex]);
-
-  useEffect(() => {
-    if (!carouselApi) return;
-
-    const syncSelectedImage = () => {
-      const nextIndex = carouselApi.selectedScrollSnap();
-      if (pendingJumpToIndexRef.current === nextIndex) {
-        pendingJumpToIndexRef.current = null;
-      }
-      setSelectedImageIndex(nextIndex);
-    };
-
-    syncSelectedImage();
-    carouselApi.on("select", syncSelectedImage);
-    carouselApi.on("reInit", syncSelectedImage);
-
-    return () => {
-      carouselApi.off("select", syncSelectedImage);
-      carouselApi.off("reInit", syncSelectedImage);
-    };
-  }, [carouselApi]);
-
-  useEffect(() => {
-    if (!carouselApi || selectedImageIndex === null) return;
-
-    if (pendingJumpToIndexRef.current !== selectedImageIndex) return;
-
-    carouselApi.scrollTo(selectedImageIndex, true);
-  }, [carouselApi, selectedImageIndex]);
+  }, [selectedImageIndex]);
 
   useEffect(() => {
     let isCancelled = false;
@@ -277,31 +235,6 @@ export default function GallerySection() {
       });
   }, [selectedImageIndex]);
 
-  const handleModalWheel = (event: React.WheelEvent<HTMLDivElement>) => {
-    if (!carouselApi) return;
-
-    const dominantDelta =
-      Math.abs(event.deltaX) > Math.abs(event.deltaY) ? event.deltaX : event.deltaY;
-
-    if (Math.abs(dominantDelta) < 24) return;
-
-    const now = Date.now();
-    if (now - wheelNavigationAtRef.current < 420) {
-      event.preventDefault();
-      return;
-    }
-
-    wheelNavigationAtRef.current = now;
-    event.preventDefault();
-
-    if (dominantDelta > 0) {
-      carouselApi.scrollNext();
-      return;
-    }
-
-    carouselApi.scrollPrev();
-  };
-
   const renderImageCard = (src: string, index: number) => (
     <button
       key={index}
@@ -356,103 +289,91 @@ export default function GallerySection() {
 
         {hasSelectedImage && (
           <div
-            className="fixed inset-0 z-[120] bg-black/70 backdrop-blur-md px-4 py-6 md:px-8 md:py-10"
-            onClick={() => {
-              pendingJumpToIndexRef.current = null;
-              setSelectedImageIndex(null);
-            }}
+            className="fixed inset-0 z-[120] bg-black/85 backdrop-blur-sm px-3 py-4 md:px-6 md:py-6"
+            onClick={closeImageViewer}
             role="dialog"
             aria-modal="true"
             aria-label={`Jahon Bozori ko'rinishi ${activeImageIndex + 1}`}
           >
-            <button
-              type="button"
-              onClick={() => {
-                pendingJumpToIndexRef.current = null;
-                setSelectedImageIndex(null);
-              }}
-              className="absolute right-4 top-4 inline-flex h-11 w-11 items-center justify-center rounded-full bg-white/10 text-white backdrop-blur-sm transition-colors hover:bg-white/20 md:right-8 md:top-8"
-              aria-label="Rasmni yopish"
-            >
-              <X className="h-5 w-5" />
-            </button>
-
-            <div className="flex min-h-full items-center justify-center">
-              <div
-                className="w-full max-w-6xl"
-                onClick={(event) => event.stopPropagation()}
-              >
-                <div className="mb-4 flex items-center justify-between gap-3 text-white">
+            <div className="mx-auto flex h-full max-w-[1500px] flex-col" onClick={(event) => event.stopPropagation()}>
+              <div className="flex items-center justify-between gap-3 rounded-2xl border border-white/10 bg-black/45 px-3 py-3 text-white backdrop-blur-sm md:px-5">
+                <div className="flex items-center gap-3">
                   <div className="rounded-full border border-white/10 bg-white/10 px-4 py-2 text-sm font-semibold backdrop-blur-sm">
                     {activeImageIndex + 1} / {images.length}
                   </div>
-                  <p className="hidden text-sm text-white/75 md:block">
-                    Swipe, scroll yoki strelka tugmalari bilan barcha rasmlarni ko'ring
+                  <p className="hidden text-sm text-white/70 md:block">
+                    `Esc` yoki tashqariga bosib yopishingiz mumkin
                   </p>
                 </div>
-
-                <div
-                  className="relative"
-                  onWheelCapture={handleModalWheel}
+                <button
+                  type="button"
+                  onClick={closeImageViewer}
+                  className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/10 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-white/20"
+                  aria-label="Rasmni yopish"
                 >
-                  <Carousel
-                    setApi={setCarouselApi}
-                    opts={{ align: "start", startIndex: activeImageIndex, duration: 32 }}
-                    className="w-full"
-                  >
-                    <CarouselContent className="-ml-0 will-change-transform">
-                      {images.map((src, index) => (
-                        <CarouselItem key={src} className="pl-0">
-                          <div className="relative flex min-h-[60vh] items-center justify-center">
-                            <div
-                              aria-hidden="true"
-                              className={`absolute inset-0 rounded-[1.75rem] bg-[linear-gradient(135deg,rgba(255,255,255,0.08),rgba(255,255,255,0.02))] transition-opacity duration-300 ${loadedImages[index] ? "opacity-0" : "animate-pulse opacity-100"}`}
-                            />
-                            <img
-                              src={src}
-                              alt={`Jahon Bozori ko'rinishi ${index + 1}`}
-                              loading={Math.abs(index - activeImageIndex) <= 1 ? "eager" : "lazy"}
-                              fetchPriority={Math.abs(index - activeImageIndex) <= 1 ? "high" : "auto"}
-                              decoding="async"
-                              onLoad={() => markImageLoaded(index)}
-                              className={`max-h-[78vh] w-full rounded-[1.75rem] object-contain shadow-2xl transition-opacity duration-300 ${loadedImages[index] ? "opacity-100" : "opacity-0"}`}
-                            />
-                          </div>
-                        </CarouselItem>
-                      ))}
-                    </CarouselContent>
-                  </Carousel>
+                  <X className="h-4 w-4" />
+                  Yopish
+                </button>
+              </div>
 
-                  <button
-                    type="button"
-                    onClick={() => carouselApi?.scrollPrev()}
-                    disabled={activeImageIndex === 0}
-                    className="absolute left-2 top-1/2 inline-flex h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full border border-white/10 bg-black/45 text-white backdrop-blur-sm transition enabled:hover:scale-105 disabled:cursor-not-allowed disabled:opacity-35 md:left-4"
-                    aria-label="Oldingi rasm"
-                  >
-                    <ChevronLeft className="h-6 w-6" />
-                  </button>
+              <div className="relative mt-3 flex min-h-0 flex-1 items-center justify-center overflow-hidden rounded-[1.75rem] border border-white/10 bg-black/35 px-2 py-2 md:px-4 md:py-4">
+                <div
+                  aria-hidden="true"
+                  className={`absolute inset-0 bg-[linear-gradient(135deg,rgba(255,255,255,0.08),rgba(255,255,255,0.02))] transition-opacity duration-300 ${loadedImages[activeImageIndex] ? "opacity-0" : "animate-pulse opacity-100"}`}
+                />
+                <img
+                  src={images[activeImageIndex]}
+                  alt={`Jahon Bozori ko'rinishi ${activeImageIndex + 1}`}
+                  loading="eager"
+                  fetchPriority="high"
+                  decoding="async"
+                  onLoad={() => markImageLoaded(activeImageIndex)}
+                  className={`relative z-10 max-h-full max-w-full object-contain transition-opacity duration-300 ${loadedImages[activeImageIndex] ? "opacity-100" : "opacity-0"}`}
+                />
 
-                  <button
-                    type="button"
-                    onClick={() => carouselApi?.scrollNext()}
-                    disabled={activeImageIndex === images.length - 1}
-                    className="absolute right-2 top-1/2 inline-flex h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full border border-white/10 bg-black/45 text-white backdrop-blur-sm transition enabled:hover:scale-105 disabled:cursor-not-allowed disabled:opacity-35 md:right-4"
-                    aria-label="Keyingi rasm"
-                  >
-                    <ChevronRight className="h-6 w-6" />
-                  </button>
-                </div>
+                <button
+                  type="button"
+                  onClick={goToPreviousImage}
+                  disabled={activeImageIndex === 0}
+                  className="absolute left-3 top-1/2 z-20 inline-flex h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full border border-white/10 bg-black/55 text-white backdrop-blur-sm transition enabled:hover:scale-105 enabled:hover:bg-black/70 disabled:cursor-not-allowed disabled:opacity-35 md:left-5 md:h-14 md:w-14"
+                  aria-label="Oldingi rasm"
+                >
+                  <ChevronLeft className="h-6 w-6" />
+                </button>
 
-                <div className="mt-5 flex items-center justify-center gap-2">
+                <button
+                  type="button"
+                  onClick={goToNextImage}
+                  disabled={activeImageIndex === images.length - 1}
+                  className="absolute right-3 top-1/2 z-20 inline-flex h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full border border-white/10 bg-black/55 text-white backdrop-blur-sm transition enabled:hover:scale-105 enabled:hover:bg-black/70 disabled:cursor-not-allowed disabled:opacity-35 md:right-5 md:h-14 md:w-14"
+                  aria-label="Keyingi rasm"
+                >
+                  <ChevronRight className="h-6 w-6" />
+                </button>
+              </div>
+
+              <div className="mt-3 overflow-x-auto pb-1">
+                <div className="flex min-w-max items-center gap-2">
                   {images.map((_, index) => (
                     <button
                       key={index}
                       type="button"
-                      onClick={() => carouselApi?.scrollTo(index)}
-                      className={`h-2.5 rounded-full transition-all ${index === activeImageIndex ? "w-8 bg-primary" : "w-2.5 bg-white/35 hover:bg-white/55"}`}
+                      onClick={() => setSelectedImageIndex(index)}
+                      className={`overflow-hidden rounded-xl border transition-all ${
+                        index === activeImageIndex
+                          ? "border-primary shadow-[0_0_0_1px_rgba(214,158,0,0.45)]"
+                          : "border-white/10 opacity-70 hover:opacity-100"
+                      }`}
                       aria-label={`${index + 1}-rasmga o'tish`}
-                    />
+                    >
+                      <img
+                        src={images[index]}
+                        alt={`Jahon Bozori preview ${index + 1}`}
+                        className="h-14 w-20 object-cover md:h-16 md:w-24"
+                        loading="lazy"
+                        decoding="async"
+                      />
+                    </button>
                   ))}
                 </div>
               </div>
