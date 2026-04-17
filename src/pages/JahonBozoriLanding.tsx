@@ -308,7 +308,7 @@ export default function JahonBozoriLanding() {
           </div>
         </div>
 
-        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 animate-bounce">
+        <div className="absolute bottom-20 left-1/2 -translate-x-1/2 animate-bounce md:bottom-8">
           <ChevronDown className="h-6 w-6 text-muted-foreground" />
         </div>
       </section>
